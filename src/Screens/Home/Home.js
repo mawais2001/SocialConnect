@@ -391,8 +391,8 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.light,
   },
   bottomStyle: {
-    marginVertical: moderateVerticalScale(8),
-    height: moderateVerticalScale(6),
+    marginVertical: moderateVerticalScale(2),
+    height: moderateVerticalScale(2),
     backgroundColor: colors.gray7,
   },
   likecommentStyle: {
