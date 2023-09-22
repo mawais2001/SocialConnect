@@ -113,6 +113,7 @@ function CreatePost(props) {
             userName: udata._data.fullName,
             userAddress: udata._data.address,
             userPicture: udata._data.profilePicture,
+            likes: [],
           });
         const fieldName = 'testing';
         const fixedValue = 'post testing';

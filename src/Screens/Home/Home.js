@@ -31,6 +31,7 @@ import auth from '@react-native-firebase/auth';
 import imagePath from '../../constants/imagePath';
 import CustomModal from '../Notification/CustomModal';
 import fontFamily from '../../styles/fontFamily';
+import LikeCompo from '../Like/LikeCompo';
 
 function Home(props) {
   const [postList, setPostList] = useState([]);
@@ -207,8 +208,9 @@ function Home(props) {
             marginTop: moderateVerticalScale(20),
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Like name="like2" size={24} color={colors.blackColor} />
-            <Text style={styles.likecommentStyle}>50</Text>
+            {/* <Like name="like2" size={24} color={colors.blackColor} />
+            <Text style={styles.likecommentStyle}>50</Text> */}
+            <LikeCompo postId={item.postId} postuserId={item.userId} />
             <View style={{marginHorizontal: moderateScale(25)}} />
             <Comment name="comment-o" size={24} color={colors.blackColor} />
             <Text style={styles.likecommentStyle}>22</Text>
