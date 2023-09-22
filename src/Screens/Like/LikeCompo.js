@@ -12,7 +12,7 @@ import Like from 'react-native-vector-icons/AntDesign';
 import Comment from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-vector-icons/Entypo';
 
-const LikeCompo = ({postId, postuserId}) => {
+const LikeCompo = ({postId, postuserId, onLike}) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
@@ -63,12 +63,14 @@ const LikeCompo = ({postId, postuserId}) => {
               likes: firestore.FieldValue.arrayRemove(loggedUser.uid),
             });
             setLiked(false);
+            // onLike();
           } else {
             // User hasn't liked the post, so like it
             await postRef.update({
               likes: firestore.FieldValue.arrayUnion(loggedUser.uid),
             });
             setLiked(true);
+            // onLike();
           }
         }
         // if (!postData.hasOwnProperty('likes')) {

@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import LogOut from 'react-native-vector-icons/MaterialIcons';
@@ -23,6 +24,7 @@ import fontFamily from '../../styles/fontFamily';
 
 function Profile(props) {
   const [udetail, setUDetail] = useState(null);
+  const [userDataLoading, setUserDataLoading] = useState(true);
   const userData = auth().currentUser;
   // console.log(userData.photoURL);
   const {user, setUser} = useAuths();
@@ -64,6 +66,7 @@ function Profile(props) {
         .get();
       if (udata) {
         setUDetail(udata);
+        setUserDataLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -87,28 +90,47 @@ function Profile(props) {
         />
         <Text style={styles.profileNameStyle}>{userData.displayName}</Text>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         activeOpacity={0.5}
         style={styles.btn}
         onPress={() =>
-          navigation.navigate('EditProfile', {userDetail: udetail._data})
+          navigation.navigate('EditProfile', {userDetail: udetail?._data})
         }>
         <View style={{flexDirection: 'row'}}>
-          <Edit name="edit" size={30} color={colors.socialpink} />
+          <Edit name="edit" size={25} color={colors.socialpink} />
           <Text style={styles.text}>Edit Profile</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      {userDataLoading ? ( // Show activity indicator while loading
+        <ActivityIndicator
+          style={styles.loadingIndicator}
+          size="large"
+          color={colors.socialpink}
+        />
+      ) : (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.btn}
+          onPress={() =>
+            navigation.navigate('EditProfile', {userDetail: udetail?._data})
+          }>
+          <View style={{flexDirection: 'row'}}>
+            <Edit name="edit" size={25} color={colors.socialpink} />
+            <Text style={styles.text}>Edit Profile</Text>
+          </View>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity activeOpacity={0.5} style={styles.btn}>
         <View style={{flexDirection: 'row'}}>
-          <Edit name="notifications-none" size={30} color={colors.socialpink} />
+          <Edit name="notifications-none" size={27} color={colors.socialpink} />
           <Text style={styles.text}>Notification</Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity activeOpacity={0.5} style={styles.btn}>
         <View style={{flexDirection: 'row'}}>
-          <Edit name="help-outline" size={30} color={colors.socialpink} />
+          <Edit name="help-outline" size={27} color={colors.socialpink} />
           <Text style={styles.text}>Help</Text>
         </View>
       </TouchableOpacity>
@@ -118,7 +140,7 @@ function Profile(props) {
         style={styles.btn}
         onPress={handleLogout}>
         <View style={{flexDirection: 'row'}}>
-          <Edit name="logout" size={30} color={colors.socialpink} />
+          <Edit name="logout" size={27} color={colors.socialpink} />
           <Text style={styles.text}>Logout</Text>
         </View>
       </TouchableOpacity>
@@ -152,7 +174,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
   },
   profileNameStyle: {
-    fontSize: scale(18),
+    fontSize: scale(17),
     color: colors.socialpink,
     // fontWeight: 'bold',
     marginTop: moderateVerticalScale(10),
@@ -173,7 +195,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.socialpink,
-    fontSize: scale(16),
+    fontSize: scale(14),
     fontFamily: fontFamily.semiBold,
     // fontWeight: '500',
     marginLeft: moderateScale(18),

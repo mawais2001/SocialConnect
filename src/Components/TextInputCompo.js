@@ -41,7 +41,7 @@ function TextInputCompo({
         </Text>
       ) : null}
       {clearIcon.length > 0 ? (
-        <Text onPress={onPressClear} style={{color: 'white'}}>
+        <Text onPress={onPressClear} style={{color: colors.socialpink}}>
           {' '}
           {clearIcon}{' '}
         </Text>
@@ -52,7 +52,7 @@ function TextInputCompo({
 
 const styles = StyleSheet.create({
   inputStyle: {
-    height: moderateScale(48),
+    height: moderateScale(50),
     justifyContent: 'space-between',
     borderRadius: moderateScale(10),
     paddingHorizontal: moderateScale(16),
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textStyle: {
-    fontSize: textScale(16),
-    fontFamily: fontFamily.bold,
+    fontSize: textScale(14),
+    fontFamily: fontFamily.medium,
     flex: 1,
     color: colors.whiteColor,
   },

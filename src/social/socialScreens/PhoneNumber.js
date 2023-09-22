@@ -22,6 +22,7 @@ import TextInputCompo from '../../Components/TextInputCompo';
 import ButtonCompo from '../../Components/ButtonCompo';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import fontFamily from '../../styles/fontFamily';
 
 function PhoneNumber(props) {
   const [phone, setPhone] = useState('');
@@ -149,25 +150,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(22),
   },
   heading: {
-    fontSize: scale(20),
+    fontSize: scale(16),
     color: colors.blackOpacity90,
     marginBottom: moderateVerticalScale(10),
+    fontFamily: fontFamily.semiBold,
   },
   heading2: {
-    fontSize: scale(16),
+    fontSize: scale(12),
     color: colors.blackOpacity60,
     textAlign: 'center',
-    fontWeight: '800',
+    fontFamily: fontFamily.medium,
   },
   input: {
     backgroundColor: colors.whiteColor,
     borderRadius: moderateScale(18),
     paddingHorizontal: moderateScale(20),
     paddingVertical: moderateScale(14),
-    fontSize: scale(16),
+    fontSize: scale(12),
     color: colors.blackColor,
     marginBottom: moderateVerticalScale(20),
     width: '90%',
+    fontFamily: fontFamily.regular,
+    justifyContent: 'center',
   },
   error: {
     fontSize: scale(14),
@@ -175,6 +179,7 @@ const styles = StyleSheet.create({
     marginBottom: moderateVerticalScale(10),
     color: colors.socialpink,
     fontWeight: 'bold',
+    fontFamily: fontFamily.medium,
   },
 });
 

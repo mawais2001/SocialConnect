@@ -24,6 +24,7 @@ import auth from '@react-native-firebase/auth';
 import HeaderCompo from '../../Components/HeaderCompo';
 import {useNavigation} from '@react-navigation/native';
 import useAuths from '../allcomponents/auth/useAuths';
+import fontFamily from '../../styles/fontFamily';
 
 function OtpVerify(props) {
   const [verificationCode, setVerificationCode] = useState('');
@@ -153,38 +154,43 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(22),
   },
   heading: {
-    fontSize: scale(20),
+    fontSize: scale(16),
     color: colors.blackOpacity90,
     marginBottom: moderateScaleVertical(10),
+    fontFamily: fontFamily.semiBold,
   },
   heading2: {
-    fontSize: scale(16),
+    fontSize: scale(12),
     color: colors.blackOpacity60,
     textAlign: 'center',
+    fontFamily: fontFamily.medium,
   },
   input: {
     backgroundColor: colors.whiteColor,
     borderRadius: moderateScale(18),
     paddingHorizontal: moderateScale(20),
     paddingVertical: moderateScale(14),
-    fontSize: scale(16),
+    fontSize: scale(12),
     color: colors.blackColor,
     marginBottom: moderateScaleVertical(20),
     width: '90%',
+    fontFamily: fontFamily.medium,
   },
   error: {
-    fontSize: scale(14),
+    fontSize: scale(12),
     textAlign: 'center',
     marginBottom: moderateVerticalScale(10),
     color: 'black',
     fontWeight: 'bold',
+    fontFamily: fontFamily.medium,
   },
   verify: {
-    fontSize: scale(14),
+    fontSize: scale(12),
     textAlign: 'center',
     marginBottom: moderateVerticalScale(10),
     color: 'orange',
     fontWeight: 'bold',
+    fontFamily: fontFamily.medium,
   },
 });
 

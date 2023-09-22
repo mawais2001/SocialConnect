@@ -222,7 +222,7 @@ function CreatePost(props) {
             placeholder="Enter Title *"
             value={title}
             onChangeText={text => setTitle(text)}
-            placeholderTextColor={colors.socialpink}
+            placeholderTextColor={colors.blackOpacity70}
             textStyle={{color: colors.blackColor}}
             inputStyle={{
               backgroundColor: colors.socialpinklight,
@@ -242,7 +242,7 @@ function CreatePost(props) {
               borderColor: colors.blackOpacity40,
             }}
             textStyle={{color: colors.blackColor}}
-            placeholderTextColor={colors.socialpink}
+            placeholderTextColor={colors.blackOpacity70}
           />
           {isloading && (
             <Text

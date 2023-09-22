@@ -31,10 +31,12 @@ function EditProfile(props) {
   const userData = auth().currentUser;
   const userDetail = props.route.params.userDetail;
   //   console.log(userData.photoURL);
-  const [email, setEmail] = useState(userDetail.email);
-  const [address, setAddress] = useState(userDetail.address);
-  const [name, setName] = useState(userData.displayName);
-  const [profileImageUrl, setProfileImageUrl] = useState(userData.photoURL);
+  const [email, setEmail] = useState(userDetail?.email || '');
+  const [address, setAddress] = useState(userDetail?.address || '');
+  const [name, setName] = useState(userData?.displayName || '');
+  const [profileImageUrl, setProfileImageUrl] = useState(
+    userData?.photoURL || '',
+  );
   const [imgData, setImgData] = useState(null);
   const [err, setErr] = useState('');
 

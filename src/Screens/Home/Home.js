@@ -210,7 +210,11 @@ function Home(props) {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {/* <Like name="like2" size={24} color={colors.blackColor} />
             <Text style={styles.likecommentStyle}>50</Text> */}
-            <LikeCompo postId={item.postId} postuserId={item.userId} />
+            <LikeCompo
+              postId={item.postId}
+              postuserId={item.userId}
+              onLike={handleLike}
+            />
             <View style={{marginHorizontal: moderateScale(25)}} />
             <Comment name="comment-o" size={24} color={colors.blackColor} />
             <Text style={styles.likecommentStyle}>22</Text>
@@ -251,6 +255,10 @@ function Home(props) {
   };
 
   const handleDeleteSuccess = () => {
+    getMyPostsData();
+  };
+
+  const handleLike = () => {
     getMyPostsData();
   };
 
@@ -365,19 +373,19 @@ const styles = StyleSheet.create({
     marginVertical: moderateVerticalScale(14),
   },
   postTitleStyle: {
-    fontSize: scale(14),
+    fontSize: scale(12),
     color: colors.blackColor,
     // fontWeight: '700',
     fontFamily: fontFamily.semiBold,
   },
   postDescStyle: {
-    fontSize: scale(12),
+    fontSize: scale(10),
     color: colors.blackOpacity90,
     marginVertical: moderateVerticalScale(3),
     fontFamily: fontFamily.medium,
   },
   postTimeStyle: {
-    fontSize: scale(10),
+    fontSize: scale(8),
     color: colors.blackColor,
     // fontWeight: '500',
     fontFamily: fontFamily.light,

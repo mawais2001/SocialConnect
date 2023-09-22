@@ -264,7 +264,7 @@ function EditPost(props) {
             clearIcon={title.length > 0 ? 'Clear' : ''}
             onPressClear={() => setTitle('')}
             textStyle={{color: colors.blackColor}}
-            placeholderTextColor={colors.socialpink}
+            placeholderTextColor={colors.blackOpacity70}
             inputStyle={{
               backgroundColor: colors.socialpinklight,
               borderWidth: 1,
@@ -286,7 +286,7 @@ function EditPost(props) {
             clearIcon={description.length > 0 ? 'Clear' : ''}
             onPressClear={() => setDescription('')}
             textStyle={{color: colors.blackColor}}
-            placeholderTextColor={colors.socialpink}
+            placeholderTextColor={colors.blackOpacity70}
           />
 
           {err.length > 1 ? (
