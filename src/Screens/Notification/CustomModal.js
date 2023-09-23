@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {
   moderateScale,
@@ -31,10 +32,7 @@ const CustomModal = ({
   userData,
   onDeleteSuccess,
 }) => {
-  // const CustomModal = ({ visible, closeModal, postData, userData, onDeleteSuccess }) => {
-  // useEffect(() => {
-
-  // }, [visible])
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   // console.log('===========postData=========================');
   // console.log(postData);
@@ -49,24 +47,13 @@ const CustomModal = ({
   };
 
   const deletePost = () => {
-    // try {
-    //     await firestores().collection('posts').doc(userData).collection('allposts').doc(postData.postId).delete();
-    //     console.log('Post successfully deleted!');
-    //     onDeleteSuccess();
-    //     closeModal();
-    //     // navigation.navigate(navigationString.HOME)
-    // } catch (error) {
-    //     console.log('===========ERROR while Deleting the Post START=========================');
-    //     console.log(error);
-    //     console.log('===========ERROR while Deleting the Post END=========================');
-    // }
-
     try {
       Alert.alert('Warning', 'Are you sure to delete this Post', [
         {
           text: 'Yes',
           onPress: async () => {
             try {
+              setIsLoading(true);
               await firestores()
                 .collection('posts')
                 .doc(userData)
@@ -76,6 +63,7 @@ const CustomModal = ({
               console.log('Post successfully deleted!');
               await storage().refFromURL(postData.imageUrl).delete();
               console.log('Image successfully deleted!');
+              setIsLoading(false);
               onDeleteSuccess();
               closeModal();
             } catch (error) {
@@ -111,7 +99,75 @@ const CustomModal = ({
       visible={visible}
       onRequestClose={closeModal}>
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        {!isLoading ? (
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={{alignItems: 'flex-end'}}>
+              <CloseIcon
+                name="circle-with-cross"
+                size={32}
+                color={colors.socialpink}
+                onPress={closeModal}
+              />
+            </TouchableOpacity>
+            {postData.userId === userData ? (
+              <View style={{marginVertical: moderateVerticalScale(10)}}>
+                <View activeOpacity={0.5} style={styles.editSyle}>
+                  <TouchableOpacity
+                    style={{flexDirection: 'row'}}
+                    onPress={handerModal}>
+                    <Edit name="edit" size={28} color={colors.blackColor} />
+                    <Text
+                      style={{
+                        fontSize: scale(16),
+                        color: colors.blackColor,
+                        marginLeft: moderateScale(12),
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View activeOpacity={0.5} style={styles.editSyle}>
+                  <TouchableOpacity
+                    style={{flexDirection: 'row'}}
+                    onPress={deletePost}>
+                    <Edit name="delete" size={28} color={colors.blackColor} />
+                    <Text
+                      style={{
+                        fontSize: scale(16),
+                        color: colors.blackColor,
+                        marginLeft: moderateScale(12),
+                      }}>
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View
+                style={{
+                  marginVertical: moderateVerticalScale(10),
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{flexDirection: 'row'}}>
+                  <Image style={styles.reportStyle} source={imagePath.report} />
+                  <Text
+                    style={{
+                      fontSize: scale(14),
+                      fontWeight: '500',
+                      color: colors.blackColor,
+                      marginLeft: moderateScale(12),
+                    }}>
+                    Report
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        ) : (
+          <ActivityIndicator size="large" color={colors.whiteColor} />
+        )}
+        {/* <View style={styles.modalContent}>
           <TouchableOpacity style={{alignItems: 'flex-end'}}>
             <CloseIcon
               name="circle-with-cross"
@@ -120,12 +176,8 @@ const CustomModal = ({
               onPress={closeModal}
             />
           </TouchableOpacity>
-          {/* <Text style={styles.modalTitle}>Custom Modal</Text>
-                    <Text>POST User ID: {postData.userId}</Text>
-                    <Text>User uid: {auth().currentUser.uid}</Text> */}
           {postData.userId === userData ? (
             <View style={{marginVertical: moderateVerticalScale(10)}}>
-              {/* <ButtonCompo title='Edit' style={{ backgroundColor: colors.wgray }} onPress={handerModal} /> */}
               <View activeOpacity={0.5} style={styles.editSyle}>
                 <TouchableOpacity
                   style={{flexDirection: 'row'}}
@@ -156,7 +208,6 @@ const CustomModal = ({
                   </Text>
                 </TouchableOpacity>
               </View>
-              {/* <ButtonCompo title='Delete' style={{ backgroundColor: colors.redColor, marginTop: moderateVerticalScale(10) }} onPress={deletePost} /> */}
             </View>
           ) : (
             <View
@@ -179,10 +230,7 @@ const CustomModal = ({
               </TouchableOpacity>
             </View>
           )}
-          {/* <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity> */}
-        </View>
+        </View> */}
       </View>
     </Modal>
   );

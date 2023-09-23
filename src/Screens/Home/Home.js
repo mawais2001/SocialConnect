@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -33,6 +33,8 @@ import CustomModal from '../Notification/CustomModal';
 import fontFamily from '../../styles/fontFamily';
 import LikeCompo from '../Like/LikeCompo';
 
+const MemoizedFlatList = React.memo(FlatList);
+
 function Home(props) {
   const [postList, setPostList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -44,50 +46,86 @@ function Home(props) {
   const userData = auth().currentUser;
   const isFocused = useIsFocused();
 
-  const getMyPostsData = async () => {
-    const allPostsArray = [];
-    // let userId = ""
-    firestore()
-      .collection('posts')
-      .onSnapshot(snap => {
-        snap.forEach(doc => {
-          // console.log("user id before: ", doc.id);
-          firestore()
-            .collection('posts')
-            .doc(doc.id)
-            .collection('allposts')
-            .orderBy('timestamp', 'desc')
-            .onSnapshot(finalDoc => {
-              var lenght__ = 0;
-              var finalLength = finalDoc.size;
-              if (finalLength === 0) {
-                setIsEmpty(true);
-              } else {
-                setIsEmpty(false);
-              }
-              finalDoc.forEach(postData => {
-                const postDataInside = postData.data();
-                const postId = postData.id;
-                // console.log("user id After: ", doc.id);
-                if (postDataInside) {
-                  lenght__ = lenght__ + 1;
-                  allPostsArray.push({
-                    postId,
-                    userId: doc.id,
-                    ...postDataInside,
-                  });
-                }
-              });
-              if (lenght__ === finalLength) {
-                // console.log('==============allPostsArray======================');
-                // console.log(allPostsArray);
-                // console.log('===============allPostsArray=====================');
-                setPostList(allPostsArray);
-              }
+  // const getMyPostsData = async () => {
+  //   const allPostsArray = [];
+  //   // let userId = ""
+  //   firestore()
+  //     .collection('posts')
+  //     .onSnapshot(snap => {
+  //       snap.forEach(doc => {
+  //         // console.log("user id before: ", doc.id);
+  //         firestore()
+  //           .collection('posts')
+  //           .doc(doc.id)
+  //           .collection('allposts')
+  //           .orderBy('timestamp', 'desc')
+  //           .onSnapshot(finalDoc => {
+  //             var lenght__ = 0;
+  //             var finalLength = finalDoc.size;
+  //             if (finalLength === 0) {
+  //               setIsEmpty(true);
+  //             } else {
+  //               setIsEmpty(false);
+  //             }
+  //             finalDoc.forEach(postData => {
+  //               const postDataInside = postData.data();
+  //               const postId = postData.id;
+  //               // console.log("user id After: ", doc.id);
+  //               if (postDataInside) {
+  //                 lenght__ = lenght__ + 1;
+  //                 allPostsArray.push({
+  //                   postId,
+  //                   userId: doc.id,
+  //                   ...postDataInside,
+  //                 });
+  //               }
+  //             });
+  //             if (lenght__ === finalLength) {
+  //               setPostList(allPostsArray);
+  //             }
+  //           });
+  //       });
+  //     });
+  // };
+
+  const getMyPostsData = useCallback(async () => {
+    try {
+      const allPostsArray = [];
+      const snapshot = await firestore().collection('posts').get();
+
+      for (const doc of snapshot.docs) {
+        const postDoc = await firestore()
+          .collection('posts')
+          .doc(doc.id)
+          .collection('allposts')
+          .orderBy('time', 'desc')
+          .get();
+
+        if (postDoc.size === 0) {
+          setIsEmpty(true);
+        } else {
+          setIsEmpty(false);
+        }
+
+        postDoc.forEach(postData => {
+          const postDataInside = postData.data();
+          const postId = postData.id;
+
+          if (postDataInside) {
+            allPostsArray.push({
+              postId,
+              userId: doc.id,
+              ...postDataInside,
             });
+          }
         });
-      });
-  };
+      }
+
+      setPostList(allPostsArray);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  }, []);
 
   const profileNaviHandler = item => {
     if (userData.uid === item.userId) {
@@ -104,17 +142,8 @@ function Home(props) {
 
   const renderItem = ({item, index, customModalHandler}) => {
     const handlePress = () => {
-      // console.log('object');
-      // setSelectedItem(item); // Set the selected item when the button is pressed
-      // setShowModal(true); // Show the modal
       customModalHandler(item);
     };
-    // console.log('=============item is here=======================');
-    // console.log(item.userId);
-    // console.log('==============item item======================');
-    // const timestamp = item.time.toDate(); // Convert Firestore Timestamp to JavaScript Date
-    // const timestamp = item.time ? item.time.toDate().toDateString() : '';
-    // const formattedTime = timestamp.toDateString();  // Format the Date as a string
     const timestamp = item.time;
     let formattedTime = '';
 
@@ -157,7 +186,6 @@ function Home(props) {
                 {item.userName ? item.userName : 'Anonymous User'}
               </Text>
               <Text numberOfLines={1} style={styles.profileDescStyle}>
-                {' '}
                 {item.userAddress ? item.userAddress : 'Anonymous Address'}{' '}
               </Text>
               <View />
@@ -185,7 +213,7 @@ function Home(props) {
             />
           </TouchableOpacity>
           <Text style={styles.postTitleStyle}> {item.title} </Text>
-          <Text
+          {/* <Text
             style={[
               styles.postDescStyle,
               {
@@ -197,7 +225,13 @@ function Home(props) {
             numberOfLines={2}>
             {' '}
             {item.description}{' '}
-          </Text>
+          </Text> */}
+          {item.description.length > 0 ? (
+            <Text style={styles.postDescStyle} numberOfLines={2}>
+              {' '}
+              {item.description}{' '}
+            </Text>
+          ) : null}
           <Text style={styles.postTimeStyle}> {formattedTime} </Text>
         </View>
         <View
@@ -236,19 +270,10 @@ function Home(props) {
               color: colors.redColor,
               textAlign: 'center',
             }}>
-            There is no any Post to Show!
+            Connecting...
           </Text>
         ) : (
           <ActivityIndicator size="large" color={colors.socialpink} />
-          // <Text
-          //   style={{
-          //     marginVertical: moderateVerticalScale(12),
-          //     fontSize: scale(16),
-          //     color: colors.blueLight,
-          //     textAlign: 'center',
-          //   }}>
-          //   Connecting Please Wait...
-          // </Text>
         )}
       </View>
     );
@@ -264,7 +289,7 @@ function Home(props) {
 
   useEffect(() => {
     getMyPostsData();
-  }, [isFocused]);
+  }, [isFocused, getMyPostsData]);
 
   return (
     <View style={styles.container}>
@@ -298,7 +323,7 @@ function Home(props) {
         </View>
       </View>
       <View style={styles.main}>
-        <FlatList
+        <MemoizedFlatList
           data={postList}
           renderItem={({item, index}) =>
             renderItem({item, index, customModalHandler})
@@ -307,6 +332,7 @@ function Home(props) {
           ItemSeparatorComponent={<View style={styles.bottomStyle} />}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={handleListEmptyComponent}
+          initialNumToRender={10}
         />
         {selectedItem && (
           <CustomModal

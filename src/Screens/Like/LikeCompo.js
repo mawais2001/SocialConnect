@@ -86,19 +86,19 @@ const LikeCompo = ({postId, postuserId, onLike}) => {
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       {/* <Like name="like2" size={24} color={colors.blackColor} /> */}
       {!!liked ? (
-        <Like
-          name="like1"
-          size={24}
-          color={colors.blueLight}
-          onPress={handleLike}
-        />
+        <TouchableOpacity
+          activeOpacity={0.3}
+          style={{paddingHorizontal: 10}}
+          onPress={handleLike}>
+          <Like name="like1" size={24} color={colors.blueLight} />
+        </TouchableOpacity>
       ) : (
-        <Like
-          name="like2"
-          size={24}
-          color={colors.blackColor}
-          onPress={handleLike}
-        />
+        <TouchableOpacity
+          activeOpacity={0.3}
+          style={{paddingHorizontal: 10}}
+          onPress={handleLike}>
+          <Like name="like2" size={24} color={colors.blackColor} />
+        </TouchableOpacity>
       )}
       <Text style={styles.likecommentStyle}> {likesCount} </Text>
     </View>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: scale(12),
     color: colors.grayColor,
     fontWeight: '500',
-    marginLeft: moderateScale(10),
+    // marginLeft: moderateScale(8),
   },
 });
 

@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Platform,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import imagePath from '../../constants/imagePath';
 import colors from '../../styles/colors';
@@ -27,17 +28,18 @@ import fontFamily from '../../styles/fontFamily';
 function PhoneNumber(props) {
   const [phone, setPhone] = useState('');
   const [err, setErr] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const loginWithPhone = async phone => {
     try {
-      setErr('Please wait...');
+      setIsLoading(true);
       const mobile = '+' + phone;
       let response = await auth().signInWithPhoneNumber(mobile);
       // console.log(response);
       // console.log('===============confirm=====================');
       // console.log(response.verificationId);
       // console.log('===============confirm=====================');
-      setErr('');
+      setIsLoading(false);
       navigation.navigate('OtpVerify', {
         response: response.verificationId,
       });
@@ -109,6 +111,13 @@ function PhoneNumber(props) {
               onChangeText={text => setPhone(text)}
             />
             {err.length > 0 ? <Text style={styles.error}> {err} </Text> : null}
+            {isLoading ? (
+              <ActivityIndicator
+                style={{marginBottom: moderateVerticalScale(6)}}
+                size={30}
+                color={colors.socialpink}
+              />
+            ) : null}
             <ButtonCompo
               title="Next"
               style={{backgroundColor: colors.redColor}}
