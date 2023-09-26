@@ -8,6 +8,9 @@ import EditProfile from '../../Screens/Profile/EditProfile';
 import UserProfile from '../../Screens/UserProfile/UserProfile';
 import Message from '../../Screens/Chat/Message';
 import ChatList from '../../Screens/Chat/ChatList';
+import CreateGroup from '../../Screens/Chat/CreateGroup';
+import AllGroups from '../../Screens/Chat/AllGroups';
+import GroupChatScreen from '../../Screens/Chat/GroupChatScreen';
 
 const Stack = createNativeStackNavigator();
 function AppNavigator(props) {
@@ -47,6 +50,22 @@ function AppNavigator(props) {
       <Stack.Screen
         name="ChatList"
         component={ChatList}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="CreateGroup"
+        component={CreateGroup}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="GroupChatScreen"
+        component={GroupChatScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AllGroups"
+        component={AllGroups}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

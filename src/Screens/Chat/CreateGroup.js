@@ -8,6 +8,7 @@ import {
   StatusBar,
   ActivityIndicator,
   FlatList,
+  Alert,
 } from 'react-native';
 import {
   moderateScale,
@@ -25,72 +26,128 @@ import imagePath from '../../constants/imagePath';
 import SearchIcon from 'react-native-vector-icons/Ionicons';
 import GroupIcon from 'react-native-vector-icons/MaterialIcons';
 import fontFamily from '../../styles/fontFamily';
+import TextInputCompo from '../../Components/TextInputCompo';
 
-const ChatList = props => {
-  const [userDataList, setUserDataList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const CreateGroup = props => {
+  const userslist = props.route.params.userslist;
+  const [userDataList, setUserDataList] = useState(userslist);
+  //   const [isLoading, setIsLoading] = useState(true);
+  // const [selectedUsers, setSelectedUsers] = useState([]);
+  const [groupName, setGroupName] = useState('');
+
   const navigation = useNavigation();
   const userData = auth().currentUser;
+  const [selectedUsers, setSelectedUsers] = useState([userData.uid]);
+  //   const getChatListHandler = async () => {
+  //     try {
+  //       const tempArray = [];
+  //       const fdata = await firestore().collection('users').get();
+  //       fdata.forEach(doc => {
+  //         tempArray.push({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         });
+  //       });
+  //       if (tempArray.length) {
+  //         setUserDataList(tempArray);
+  //         setIsLoading(false);
+  //       }
+  //     } catch (error) {
+  //       console.log('=============Error in getting users=======================');
+  //       console.log(error);
+  //       console.log('====================================');
+  //     }
+  //   };
 
-  const getChatListHandler = async () => {
-    try {
-      const tempArray = [];
-      const fdata = await firestore().collection('users').get();
-      fdata.forEach(doc => {
-        tempArray.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-      if (tempArray.length) {
-        setUserDataList(tempArray);
-        setIsLoading(false);
-      }
-      //   if (userDataList.length) {
-      //     console.log('===========User data list START=========================');
-      //     console.log(userDataList);
-      //     console.log('============User data list END========================');
-      //   }
-    } catch (error) {
-      console.log('=============Error in getting users=======================');
-      console.log(error);
-      console.log('====================================');
+  //   useEffect(() => {
+  //     console.log('i am call in useEffect hook');
+  //     getChatListHandler();
+  //   }, []);
+
+  //   if (isLoading) {
+  //     return (
+  //       <View
+  //         style={{
+  //           flex: 1,
+  //           justifyContent: 'center',
+  //           alignItems: 'center',
+  //           backgroundColor: colors.socialpinklight,
+  //         }}>
+  //         <ActivityIndicator size="large" color={colors.socialpink} />
+  //       </View>
+  //     );
+  //   }
+
+  //   const handleMessageScreen = item => {
+  //     navigation.navigate(navigationString.Message, {
+  //       userData: item,
+  //       userId: item.id,
+  //     });
+  //   };
+
+  const handleCreateGroup = item => {
+    const uid = item.id;
+    // Check if the user is already selected, if yes, remove them; otherwise, add them to the selectedUsers array
+    if (selectedUsers.includes(uid)) {
+      const updatedUsers = selectedUsers.filter(
+        selectedUid => selectedUid !== uid,
+      );
+      setSelectedUsers(updatedUsers);
+    } else {
+      setSelectedUsers([...selectedUsers, uid]);
     }
   };
 
-  useEffect(() => {
-    console.log('i am call in useEffect hook');
-    getChatListHandler();
-  }, []);
+  // Function to create a new group
+  const createGroup = async (participants, groupName) => {
+    try {
+      // Create a new document in the "groups" collection
+      const groupRef = await firestore().collection('groups').add({
+        groupName: groupName,
+        participants: participants,
+        // Add other group data if needed
+      });
 
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: colors.socialpinklight,
-        }}>
-        <ActivityIndicator size="large" color={colors.socialpink} />
-      </View>
-    );
-  }
+      // Get the ID of the newly created group
+      const groupId = groupRef.id;
 
-  const handleMessageScreen = item => {
-    // console.log('i am a new function: ', item.id);
-    navigation.navigate(navigationString.Message, {
-      userData: item,
-      userId: item.id,
-    });
+      return groupId;
+    } catch (error) {
+      console.error('Error creating group:', error);
+      throw error;
+    }
+  };
+
+  const handleCreateGroupScreen = async () => {
+    console.log(selectedUsers);
+    if (selectedUsers.length < 2 || groupName.length < 1) {
+      return Alert.alert(
+        'Warning',
+        'Group Name and atleast one participant requreid to create group',
+      );
+    }
+
+    // const groupId = createGroup(selectedUsers, groupName);
+    // navigation.navigate('GroupChatScreen', {groupId});
+    try {
+      const groupId = await createGroup(selectedUsers, groupName);
+      navigation.navigate('GroupChatScreen', {groupId});
+    } catch (error) {
+      // Handle any errors that occur during group creation
+      console.error('Error creating group:', error);
+    }
   };
 
   const renderItem = ({item}) => {
+    const isSelected = selectedUsers.includes(item.id);
     return item.id === userData.uid ? null : (
       <TouchableOpacity
         activeOpacity={0.5}
-        style={styles.mainContentStyle}
-        onPress={() => handleMessageScreen(item)}>
+        style={[
+          styles.mainContentStyle,
+          {backgroundColor: isSelected ? colors.blueLight : colors.socialgray},
+        ]}
+        onPress={() => handleCreateGroup(item)}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={{uri: item.profilePicture}} style={styles.image} />
           <View
@@ -100,26 +157,16 @@ const ChatList = props => {
               flex: 1,
             }}>
             <Text style={styles.nameStyle}>{item.fullName}</Text>
-            <Text numberOfLines={1} style={styles.messageStyle}>
-              Hi, how are you!
-            </Text>
           </View>
           <View style={{alignSelf: 'center'}}>
             <Text></Text>
-            <Text numberOfLines={1} style={[styles.messageStyle]}>
+            {/* <Text numberOfLines={1} style={[styles.messageStyle]}>
               5:20
-            </Text>
+            </Text> */}
           </View>
         </View>
       </TouchableOpacity>
     );
-    //   <TouchableOpacity activeOpacity={0.5} style={styles.mainContentStyle}>
-    //     <Image
-    //       source={{uri: item.profilePicture}}
-    //       style={{width: 50, height: 50}}
-    //     />
-    //     <Text>{item.fullName}</Text>
-    //   </TouchableOpacity>
   };
 
   return (
@@ -136,23 +183,40 @@ const ChatList = props => {
               style={{tintColor: colors.socialpink}}
             />
           </TouchableOpacity>
-          <Text style={styles.nameStyle1}>Chats</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(navigationString.AllGroups)}>
-            <GroupIcon name="group" size={28} color={colors.socialpink} />
-          </TouchableOpacity>
+          <Text style={styles.nameStyle1}>
+            Select Participitant{' '}
+            {selectedUsers.length > 0 ? selectedUsers.length : null}
+          </Text>
+          <View />
         </View>
         <View style={{}}>
           <View style={styles.profileStyle}>
-            <View>
+            <View style={{alignItems: 'center'}}>
               <Image
                 style={styles.profileimage}
                 source={{uri: userData.photoURL}}
               />
+              <Text
+                style={{
+                  fontSize: scale(14),
+                  color: colors.socialpink,
+                  fontFamily: fontFamily.medium,
+                }}>
+                You
+              </Text>
             </View>
-            <View>
-              <SearchIcon name="search" size={24} color={colors.socialpink} />
-            </View>
+            {/* <View style={{marginHorizontal: moderateScale(10)}} /> */}
+            <TextInputCompo
+              placeholder="Enter Group Name"
+              placeholderTextColor={colors.blackOpacity70}
+              inputStyle={{backgroundColor: colors.whiteColor, width: '50%'}}
+              onChangeText={text => setGroupName(text)}
+              value={groupName}
+              textStyle={{color: colors.blackColor}}
+            />
+            <View />
+            {/* <View>
+            </View> */}
           </View>
         </View>
       </View>
@@ -166,13 +230,9 @@ const ChatList = props => {
       <View style={styles.groupStyle}>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() =>
-            navigation.navigate(navigationString.CreateGroup, {
-              userslist: userDataList,
-            })
-          }
+          onPress={handleCreateGroupScreen}
           style={styles.groupIconStyle}>
-          <GroupIcon name="group-add" size={30} color={colors.socialpink} />
+          <GroupIcon name="arrow-forward" size={35} color={colors.socialpink} />
         </TouchableOpacity>
       </View>
     </View>
@@ -185,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.socialpinklight,
   },
   mainContentStyle: {
-    backgroundColor: colors.socialpinklight,
+    backgroundColor: colors.socialgray,
     marginBottom: moderateVerticalScale(10),
     marginHorizontal: moderateScale(20),
     paddingVertical: moderateVerticalScale(10),
@@ -248,7 +308,7 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
     color: colors.socialpink,
     // fontWeight: 'bold',
-    fontFamily: fontFamily.poppinsBlack,
+    fontFamily: fontFamily.semiBold,
   },
   groupStyle: {
     backgroundColor: colors.whiteColor,
@@ -268,4 +328,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatList;
+export default CreateGroup;

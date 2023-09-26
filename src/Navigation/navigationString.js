@@ -11,4 +11,7 @@ export default {
   User_Profile: 'UserProfile',
   Message: 'Message',
   ChatList: 'ChatList',
+  CreateGroup: 'CreateGroup',
+  GroupChatScreen: 'GroupChatScreen',
+  AllGroups: 'AllGroups',
 };
