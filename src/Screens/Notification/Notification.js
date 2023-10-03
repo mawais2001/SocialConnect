@@ -22,6 +22,7 @@ import fontFamily from '../../styles/fontFamily';
 import ThreeDotICon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import navigationString from '../../Navigation/navigationString';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Notification(props) {
   const [notification, setNotification] = useState([]);
@@ -29,6 +30,8 @@ function Notification(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [unsubscribe, setUnsubscribe] = useState(null);
+  const [markNotification, setmarkNotification] = useState([]);
+  const [clickedNotifications, setClickedNotifications] = useState([]);
   const navigation = useNavigation();
 
   const userData = auth().currentUser;
@@ -265,8 +268,67 @@ function Notification(props) {
     );
   };
 
+  //   const handleNotificationClick = item => {
+  //     // Check if the notification is already clicked
+  //     if (!markNotification.includes(item.postId)) {
+  //       // If not clicked, mark it as clicked and update the state
+  //       setmarkNotification(prevState => [...prevState, item.postId]);
+  //     }
+  //     // Handle navigation or any other action here
+  //     navigation.navigate('DetailPost', {postData: item.postData});
+  //   };
+
+  const handleNotificationClick = async item => {
+    try {
+      // Check if the notification is already clicked in AsyncStorage
+      const clickedIds = await AsyncStorage.getItem('clickedNotifications');
+      const clickedIdsArray = clickedIds ? JSON.parse(clickedIds) : [];
+
+      if (!clickedIdsArray.includes(item.postId)) {
+        // If not clicked, mark it as clicked and update AsyncStorage
+        const updatedClickedIdsArray = [...clickedIdsArray, item.postId];
+        await AsyncStorage.setItem(
+          'clickedNotifications',
+          JSON.stringify(updatedClickedIdsArray),
+        );
+
+        // Update state with the clicked notifications
+        setClickedNotifications(updatedClickedIdsArray);
+        console.log('ids list ', updatedClickedIdsArray);
+      }
+
+      // Handle navigation or any other action here
+      navigation.navigate('DetailPost', {postData: item.postData});
+    } catch (error) {
+      // Handle error
+      console.error('Error handling notification click:', error);
+    }
+  };
+
+  useEffect(() => {
+    const loadClickedNotifications = async () => {
+      try {
+        const clickedIds = await AsyncStorage.getItem('clickedNotifications');
+        const clickedIdsArray = clickedIds ? JSON.parse(clickedIds) : [];
+        setClickedNotifications(clickedIdsArray);
+        console.log('useEffect ', clickedIdsArray);
+      } catch (error) {
+        console.error('Error loading clicked notifications:', error);
+      }
+    };
+
+    loadClickedNotifications();
+  }, []);
+
   const renderItem = ({item}) => {
     // console.log('item time is: ', item.postData.time);
+    const isClicked = clickedNotifications.includes(item.postId);
+    const notificationColor = isClicked ? colors.whiteColor : '#FAF9F6';
+    console.log(notificationColor);
+    console.log(
+      `Item ${item.postId} - isClicked: ${isClicked}, notificationColor: ${notificationColor}`,
+    );
+
     const postTime = item.postData.time.toDate();
     const currentTime = new Date();
     let formattedTime = '';
@@ -297,6 +359,8 @@ function Notification(props) {
             alignItems: 'center',
             flex: 1,
             justifyContent: 'space-between',
+            backgroundColor: notificationColor,
+            padding: moderateScale(12),
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
             <TouchableOpacity
@@ -318,9 +382,10 @@ function Notification(props) {
                 alignItems: 'flex-start',
                 paddingLeft: moderateScale(8),
               }}
-              onPress={() =>
+              onPress={() => handleNotificationClick(item)}>
+              {/* onPress={() =>
                 navigation.navigate('DetailPost', {postData: item.postData})
-              }>
+              }> */}
               <Text numberOfLines={1} style={styles.profileNameStyle}>
                 {item.userName ? item.userName : 'Anonymous User'}
               </Text>
@@ -343,6 +408,8 @@ function Notification(props) {
       </View>
     );
   };
+
+  console.log('clickedNotifications: ', clickedNotifications);
 
   return (
     <View style={styles.container}>
@@ -415,7 +482,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(22),
   },
   bottomStyle: {
-    marginVertical: moderateVerticalScale(8),
+    marginVertical: moderateVerticalScale(4),
   },
 });
 
