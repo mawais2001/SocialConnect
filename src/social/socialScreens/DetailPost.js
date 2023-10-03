@@ -90,10 +90,10 @@ function DetailPost(props) {
             {' '}
             {postData.description ? postData.description : postData.title}{' '}
           </Text>
-          <ButtonCompo
+          {/* <ButtonCompo
             title="See More"
             style={{backgroundColor: colors.redColor}}
-          />
+          /> */}
         </View>
       </View>
     </ImageBackground>

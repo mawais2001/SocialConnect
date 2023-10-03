@@ -35,6 +35,7 @@ const UserProfile = props => {
     try {
       const udata = await firestores().collection('users').doc(userId).get();
       if (udata) {
+        // console.log(udata);
         setUserDetail(udata._data);
       }
     } catch (error) {

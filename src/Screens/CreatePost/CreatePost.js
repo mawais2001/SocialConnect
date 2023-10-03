@@ -28,6 +28,7 @@ import firestores, {firebase} from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {useNavigation} from '@react-navigation/native';
 import navigationString from '../../Navigation/navigationString';
+import SendNotificationAll from '../Notification/SendNotificationAll';
 
 function CreatePost(props) {
   const [title, setTitle] = useState('');
@@ -133,10 +134,24 @@ function CreatePost(props) {
             console.error('Error adding field:', error);
           });
         // console.log('=============userPostsRef START=======================');
-        // console.log(userPostsRef);
+        // console.log((await userPostsRef.get()).data());
         // console.log('=============userPostsRef END=======================');
-        if (userPostsRef) {
+
+        // console.log('=============userPosts Id START=======================');
+        // console.log(userPostsRef.id);
+        // console.log('=============userPosts Id END=======================');
+
+        const userPostsDoc = await userPostsRef.get();
+
+        if (userPostsDoc.exists) {
+          const postData = userPostsDoc.data();
           setIsLoading(false);
+          await SendNotificationAll({
+            title: title,
+            picUrl: downloadURL,
+            postId: userPostsRef.id,
+            postData: postData,
+          });
           setTitle('');
           setDescription('');
           setImgData(null);
@@ -148,6 +163,7 @@ function CreatePost(props) {
         }
       }
     } catch (error) {
+      setIsLoading(false);
       console.log('============UPLOADING POST========================');
       console.log(error);
       console.log('====================================');
