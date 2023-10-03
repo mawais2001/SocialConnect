@@ -28,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import useAuths from '../allcomponents/auth/useAuths';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import messaging from '@react-native-firebase/messaging';
 
 function Register(props) {
   const [email, setEmail] = useState('');
@@ -104,6 +105,16 @@ function Register(props) {
     }
   };
 
+  const getToken = async () => {
+    try {
+      const token = await messaging().getToken();
+      return token;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   const handlerAllUserData = async imgUploadResponse => {
     try {
       await userData.updateProfile({
@@ -117,7 +128,12 @@ function Register(props) {
         phone: userData.phoneNumber,
         profilePicture: imgUploadResponse,
       });
-
+      const token = await getToken();
+      if (token) {
+        await firestores().collection('fcmtoken').doc(userData.uid).set({
+          token: token,
+        });
+      }
       return true;
     } catch (error) {
       console.log('===========handlerAllUserData=========================');

@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 function Notification(props) {
-    return (
-        <View style={styles.container}>
-            <Text>Notification</Text>
-        </View>
-    );
+  const userData = auth().currentUser.uid;
+  console.log(userData);
+  return (
+    <View style={styles.container}>
+      <Text>Notification</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-
-    }
-})
+  container: {},
+});
 
 export default Notification;
 
@@ -78,7 +79,6 @@ export default Notification;
 //             })
 
 //     }
-
 
 //     const customModalHandler = (item) => {
 //         setSelectedItem(item); // Set the selected item when the button is pressed
@@ -188,8 +188,6 @@ export default Notification;
 //         </View>
 //     );
 // }
-
-
 
 // const styles = StyleSheet.create({
 //     container: {
