@@ -5,7 +5,13 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 // Function to send a message to a group
-const sendMessageToGroup = async (groupId, senderUid, text) => {
+const sendMessageToGroup = async (
+  groupId,
+  senderUid,
+  text,
+  senderName,
+  senderImage,
+) => {
   try {
     // Create a new message document in the "messages" sub-collection of the group
     await firestore()
@@ -15,6 +21,8 @@ const sendMessageToGroup = async (groupId, senderUid, text) => {
       .add({
         sender: senderUid,
         text: text,
+        senderName: senderName, // new line
+        senderImage: senderImage,
         timestamp: new Date(),
         // Add other message data if needed
       });
@@ -32,7 +40,7 @@ const getGroupMessages = async groupId => {
       .collection('groups')
       .doc(groupId)
       .collection('messages')
-      .orderBy('timestamp', 'asc') // Order messages by timestamp in ascending order
+      .orderBy('timestamp', 'desc') // Order messages by timestamp in ascending order
       .get();
 
     // Extract the messages from the query snapshot

@@ -87,6 +87,7 @@ function AllGroups(props) {
         onPress={() =>
           navigation.navigate(navigationString.GroupChatScreen, {
             groupId: item.id,
+            allgroup: true,
           })
         }>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
