@@ -120,7 +120,7 @@ function Home(props) {
           }
         });
       }
-
+      allPostsArray.sort((a, b) => b.time - a.time);
       setPostList(allPostsArray);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -144,15 +144,53 @@ function Home(props) {
     const handlePress = () => {
       customModalHandler(item);
     };
-    const timestamp = item.time;
+    // const timestamp = item.time;
+    const postTime = item.time.toDate();
+    const currentTime = new Date();
     let formattedTime = '';
 
-    if (timestamp) {
-      const dateObject = timestamp.toDate();
-      if (dateObject instanceof Date && !isNaN(dateObject)) {
-        formattedTime = dateObject.toDateString();
-      }
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    if (
+      postTime <= currentTime &&
+      postTime >=
+        new Date(
+          currentTime.getFullYear(),
+          currentTime.getMonth(),
+          currentTime.getDate(),
+          0,
+          0,
+          0,
+        )
+    ) {
+      formattedTime = postTime.toLocaleTimeString();
+      // console.log();
+    } else {
+      // formattedTime = postTime.toLocaleDateString();
+      formattedTime = `${postTime.getDate()} ${
+        monthNames[postTime.getMonth()]
+      } ${postTime.getFullYear()}`;
     }
+
+    // if (timestamp) {
+    //   const dateObject = timestamp.toDate();
+    //   if (dateObject instanceof Date && !isNaN(dateObject)) {
+    //     formattedTime = dateObject.toDateString();
+    //   }
+    // }
 
     return (
       <View style={styles.post1}>

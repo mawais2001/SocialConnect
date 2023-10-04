@@ -311,7 +311,7 @@ function Notification(props) {
         const clickedIds = await AsyncStorage.getItem('clickedNotifications');
         const clickedIdsArray = clickedIds ? JSON.parse(clickedIds) : [];
         setClickedNotifications(clickedIdsArray);
-        console.log('useEffect ', clickedIdsArray);
+        // console.log('useEffect ', clickedIdsArray);
       } catch (error) {
         console.error('Error loading clicked notifications:', error);
       }
@@ -324,14 +324,28 @@ function Notification(props) {
     // console.log('item time is: ', item.postData.time);
     const isClicked = clickedNotifications.includes(item.postId);
     const notificationColor = isClicked ? colors.whiteColor : '#FAF9F6';
-    console.log(notificationColor);
-    console.log(
-      `Item ${item.postId} - isClicked: ${isClicked}, notificationColor: ${notificationColor}`,
-    );
+    // console.log(notificationColor);
+    // console.log(
+    //   `Item ${item.postId} - isClicked: ${isClicked}, notificationColor: ${notificationColor}`,
+    // );
 
     const postTime = item.postData.time.toDate();
     const currentTime = new Date();
     let formattedTime = '';
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     if (
       postTime <= currentTime &&
       postTime >=
@@ -345,9 +359,12 @@ function Notification(props) {
         )
     ) {
       formattedTime = postTime.toLocaleTimeString();
-      console.log();
+      // console.log();
     } else {
-      formattedTime = postTime.toLocaleDateString();
+      // formattedTime = postTime.toLocaleDateString();
+      formattedTime = `${postTime.getDate()} ${
+        monthNames[postTime.getMonth()]
+      } ${postTime.getFullYear()}`;
     }
 
     // console.log(formattedTime);

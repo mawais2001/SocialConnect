@@ -36,7 +36,7 @@ function Search(props) {
   const navigation = useNavigation();
 
   const getMyPostsData = async () => {
-    console.log('i am function');
+    // console.log('i am function');
     const allPostsArray = [];
     const postdata = firestore().collection('posts');
     const alldocs = await postdata.get();
@@ -106,13 +106,13 @@ function Search(props) {
     });
     setFilteredPostList(filtered);
     if (filtered.length === 0) {
-      console.log('no search query matching');
+      // console.log('no search query matching');
       setPostLength(0);
       setIsEmpty(true); // No matching posts found
     } else {
-      console.log('================Search is matching====================');
+      // console.log('================Search is matching====================');
       setPostLength(filtered.length);
-      console.log('filtered.length: ', filtered.length);
+      // console.log('filtered.length: ', filtered.length);
       setIsEmpty(false); // Matching posts found
     }
   };
