@@ -22,6 +22,7 @@ import TextInputCompo from '../../Components/TextInputCompo';
 import fontFamily from '../../styles/fontFamily';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 function Search(props) {
   const [postList, setPostList] = useState([]);
@@ -71,7 +72,10 @@ function Search(props) {
         activeOpacity={0.7}
         style={styles.postContainer}
         onPress={() => navigation.navigate('DetailPost', {postData: item})}>
-        <Image style={styles.image} source={{uri: item.imageUrl}} />
+        <FastImage
+          style={styles.image}
+          source={{uri: item.imageUrl, priority: FastImage.priority.normal}}
+        />
         <View style={styles.overlay}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.time}>{formattedTime}</Text>

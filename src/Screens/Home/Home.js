@@ -32,6 +32,7 @@ import imagePath from '../../constants/imagePath';
 import CustomModal from '../Notification/CustomModal';
 import fontFamily from '../../styles/fontFamily';
 import LikeCompo from '../Like/LikeCompo';
+import FastImage from 'react-native-fast-image';
 
 const MemoizedFlatList = React.memo(FlatList);
 
@@ -205,10 +206,11 @@ function Home(props) {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => profileNaviHandler(item)}>
-              <Image
+              <FastImage
                 style={styles.profileStyle}
                 source={{
                   uri: item.userPicture ? item.userPicture : imagePath.avatar,
+                  priority: FastImage.priority.normal,
                 }}
               />
             </TouchableOpacity>
@@ -243,10 +245,11 @@ function Home(props) {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('DetailPost', {postData: item})}>
-            <Image
+            <FastImage
               style={styles.postImageStyle}
               source={{
                 uri: item.imageUrl ? item.imageUrl : imagePath.blankimage,
+                priority: FastImage.priority.normal,
               }}
             />
           </TouchableOpacity>

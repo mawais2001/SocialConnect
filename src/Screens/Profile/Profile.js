@@ -21,6 +21,7 @@ import firestores from '@react-native-firebase/firestore';
 import Edit from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import fontFamily from '../../styles/fontFamily';
+import FastImage from 'react-native-fast-image';
 
 function Profile(props) {
   const [udetail, setUDetail] = useState(null);
@@ -80,12 +81,13 @@ function Profile(props) {
   return (
     <View style={styles.container}>
       <View style={styles.head}>
-        <Image
+        <FastImage
           style={styles.profileImageStyle}
           source={{
             uri: userData.photoURL
               ? userData.photoURL
               : 'https://cdn2.vectorstock.com/i/1000x1000/17/61/male-avatar-profile-picture-vector-10211761.jpg',
+            priority: FastImage.priority.normal,
           }}
         />
         <Text style={styles.profileNameStyle}>{userData.displayName}</Text>

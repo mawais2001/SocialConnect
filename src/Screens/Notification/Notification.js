@@ -23,6 +23,7 @@ import ThreeDotICon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import navigationString from '../../Navigation/navigationString';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image';
 
 function Notification(props) {
   const [notification, setNotification] = useState([]);
@@ -199,7 +200,7 @@ function Notification(props) {
 
         if (tempArray.length < 1) {
           setIsEmpty(true);
-          console.log('No Notification found!');
+          // console.log('No Notification found!');
         } else {
           setIsEmpty(false);
         }
@@ -294,7 +295,7 @@ function Notification(props) {
 
         // Update state with the clicked notifications
         setClickedNotifications(updatedClickedIdsArray);
-        console.log('ids list ', updatedClickedIdsArray);
+        // console.log('ids list ', updatedClickedIdsArray);
       }
 
       // Handle navigation or any other action here
@@ -383,12 +384,13 @@ function Notification(props) {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => profileNaviHandler(item.userId)}>
-              <Image
+              <FastImage
                 style={styles.profileStyle}
                 source={{
                   uri: item.postData.userPicture
                     ? item.postData.userPicture
                     : imagePath.avatar,
+                  priority: FastImage.priority.normal,
                 }}
               />
             </TouchableOpacity>
@@ -426,7 +428,7 @@ function Notification(props) {
     );
   };
 
-  console.log('clickedNotifications: ', clickedNotifications);
+  // console.log('clickedNotifications: ', clickedNotifications);
 
   return (
     <View style={styles.container}>

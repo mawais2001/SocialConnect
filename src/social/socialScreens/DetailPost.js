@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
 import ButtonCompo from '../../Components/ButtonCompo';
 import imagePath from '../../constants/imagePath';
+import FastImage from 'react-native-fast-image';
 
 function DetailPost(props) {
   const postData = props.route.params.postData;
@@ -45,12 +46,13 @@ function DetailPost(props) {
             alignItems: 'center',
             flex: 1,
           }}>
-          <Image
+          <FastImage
             style={styles.profileStyle}
             source={{
               uri: postData.userPicture
                 ? postData.userPicture
                 : imagePath.avatar,
+              priority: FastImage.priority.normal,
             }}
           />
           <View style={{flex: 1}}>

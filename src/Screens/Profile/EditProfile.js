@@ -26,6 +26,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
 import navigationString from '../../Navigation/navigationString';
+import FastImage from 'react-native-fast-image';
 
 function EditProfile(props) {
   const userData = auth().currentUser;
@@ -267,16 +268,20 @@ function EditProfile(props) {
           }}>
           {imgData ? (
             <TouchableOpacity activeOpacity={0.5} onPress={handleImagePicker}>
-              <Image style={styles.image} source={{uri: imgData.uri}} />
+              <FastImage
+                style={styles.image}
+                source={{uri: imgData.uri, priority: FastImage.priority.normal}}
+              />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity activeOpacity={0.5} onPress={handleImagePicker}>
-              <Image
+              <FastImage
                 style={styles.image}
                 source={{
                   uri: userData.photoURL
                     ? userData.photoURL
                     : imagePath.avatarImage,
+                  priority: FastImage.priority.normal,
                 }}
               />
             </TouchableOpacity>

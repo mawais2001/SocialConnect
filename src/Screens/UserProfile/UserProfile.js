@@ -23,6 +23,7 @@ import EmailIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddressIcon from 'react-native-vector-icons/Ionicons';
 import ChatIcon from 'react-native-vector-icons/MaterialIcons';
 import navigationString from '../../Navigation/navigationString';
+import FastImage from 'react-native-fast-image';
 
 const UserProfile = props => {
   const userId = props.route.params.userId;
@@ -59,9 +60,12 @@ const UserProfile = props => {
     <View style={styles.container}>
       <View style={styles.profileImgConatiner}>
         {userDetail && userDetail.profilePicture ? (
-          <Image
+          <FastImage
             style={styles.profileImgStyle}
-            source={{uri: userDetail.profilePicture}}
+            source={{
+              uri: userDetail.profilePicture,
+              priority: FastImage.priority.normal,
+            }}
           />
         ) : (
           <ActivityIndicator size="small" color="gray" />
