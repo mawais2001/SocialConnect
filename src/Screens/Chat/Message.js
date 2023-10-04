@@ -24,6 +24,7 @@ import BackIcon from 'react-native-vector-icons/Ionicons';
 import ThreeDotIcon from 'react-native-vector-icons/Entypo';
 import {GiftedChat} from 'react-native-gifted-chat';
 import auth from '@react-native-firebase/auth';
+import FastImage from 'react-native-fast-image';
 
 function Message(props) {
   const [messages, setMessages] = useState([]);
@@ -92,12 +93,13 @@ function Message(props) {
             onPress={() => navigation.goBack()}>
             <BackIcon name="arrow-back" size={22} color={colors.socialpink} />
           </TouchableOpacity>
-          <Image
+          <FastImage
             style={styles.imageStyle}
             source={{
               uri: receiverData.profilePicture
                 ? receiverData.profilePicture
                 : imagePath.avatarImage,
+              priority: FastImage.priority.normal,
             }}
           />
         </View>

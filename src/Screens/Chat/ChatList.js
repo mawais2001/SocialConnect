@@ -25,6 +25,7 @@ import imagePath from '../../constants/imagePath';
 import SearchIcon from 'react-native-vector-icons/Ionicons';
 import GroupIcon from 'react-native-vector-icons/MaterialIcons';
 import fontFamily from '../../styles/fontFamily';
+import FastImage from 'react-native-fast-image';
 
 const ChatList = props => {
   const [userDataList, setUserDataList] = useState([]);
@@ -59,7 +60,7 @@ const ChatList = props => {
   };
 
   useEffect(() => {
-    console.log('i am call in useEffect hook');
+    // console.log('i am call in useEffect hook');
     getChatListHandler();
   }, []);
 
@@ -92,7 +93,13 @@ const ChatList = props => {
         style={styles.mainContentStyle}
         onPress={() => handleMessageScreen(item)}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image source={{uri: item.profilePicture}} style={styles.image} />
+          <FastImage
+            source={{
+              uri: item.profilePicture,
+              priority: FastImage.priority.normal,
+            }}
+            style={styles.image}
+          />
           <View
             style={{
               marginLeft: moderateScale(14),
@@ -145,9 +152,12 @@ const ChatList = props => {
         <View style={{}}>
           <View style={styles.profileStyle}>
             <View>
-              <Image
+              <FastImage
                 style={styles.profileimage}
-                source={{uri: userData.photoURL}}
+                source={{
+                  uri: userData.photoURL,
+                  priority: FastImage.priority.normal,
+                }}
               />
             </View>
             <View>

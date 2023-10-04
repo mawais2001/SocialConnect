@@ -27,6 +27,7 @@ import SearchIcon from 'react-native-vector-icons/Ionicons';
 import GroupIcon from 'react-native-vector-icons/MaterialIcons';
 import fontFamily from '../../styles/fontFamily';
 import TextInputCompo from '../../Components/TextInputCompo';
+import FastImage from 'react-native-fast-image';
 
 const CreateGroup = props => {
   const userslist = props.route.params.userslist;
@@ -149,7 +150,13 @@ const CreateGroup = props => {
         ]}
         onPress={() => handleCreateGroup(item)}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image source={{uri: item.profilePicture}} style={styles.image} />
+          <FastImage
+            source={{
+              uri: item.profilePicture,
+              priority: FastImage.priority.normal,
+            }}
+            style={styles.image}
+          />
           <View
             style={{
               marginLeft: moderateScale(14),
@@ -192,9 +199,12 @@ const CreateGroup = props => {
         <View style={{}}>
           <View style={styles.profileStyle}>
             <View style={{alignItems: 'center'}}>
-              <Image
+              <FastImage
                 style={styles.profileimage}
-                source={{uri: userData.photoURL}}
+                source={{
+                  uri: userData.photoURL,
+                  priority: FastImage.priority.normal,
+                }}
               />
               <Text
                 style={{

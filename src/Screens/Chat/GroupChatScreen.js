@@ -29,6 +29,7 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import BackIcon from 'react-native-vector-icons/Ionicons';
 import ThreeDotIcon from 'react-native-vector-icons/Entypo';
 import {sendMessageToGroup, getGroupMessages} from './GroupFunctions';
+import FastImage from 'react-native-fast-image';
 
 function GroupChatScreen(props) {
   const groupId = props.route.params.groupId;
@@ -218,9 +219,10 @@ function GroupChatScreen(props) {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {/* Display sender's image */}
                 {!!props.currentMessage.user.uimg ? (
-                  <Image
+                  <FastImage
                     source={{
                       uri: props.currentMessage.user.uimg,
+                      priority: FastImage.priority.normal,
                     }}
                     style={{
                       width: 30, // Adjust the image width as needed
