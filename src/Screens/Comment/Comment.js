@@ -35,6 +35,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import RemoveIcon from 'react-native-vector-icons/FontAwesome';
 import HeartIcon from 'react-native-vector-icons/AntDesign';
 import navigationString from '../../Navigation/navigationString';
+import FastImage from 'react-native-fast-image';
 
 function Comment({route}) {
   const {postId, postuserId, commentLength} = route.params;
@@ -276,10 +277,11 @@ function Comment({route}) {
         <View style={styles.commentst}>
           <View style={{marginRight: moderateScale(10)}}>
             <TouchableOpacity onPress={() => profileNaviHandler(item)}>
-              <Image
+              <FastImage
                 style={styles.image}
                 source={{
                   uri: item.userImage ? item.userImage : imagePath.avatarImage,
+                  priority: FastImage.priority.normal,
                 }}
               />
             </TouchableOpacity>

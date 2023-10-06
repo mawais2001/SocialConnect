@@ -88,6 +88,9 @@ function DetailPost(props) {
               padding: moderateScale(8),
               borderRadius: moderateScale(10),
               marginBottom: moderateVerticalScale(10),
+              textAlign: 'center',
+              // letterSpacing: 1,
+              // lineHeight: 25,
             }}>
             {' '}
             {postData.description ? postData.description : postData.title}{' '}

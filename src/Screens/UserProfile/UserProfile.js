@@ -8,6 +8,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
+  Alert,
 } from 'react-native';
 import imagePath from '../../constants/imagePath';
 import {
@@ -24,6 +26,7 @@ import AddressIcon from 'react-native-vector-icons/Ionicons';
 import ChatIcon from 'react-native-vector-icons/MaterialIcons';
 import navigationString from '../../Navigation/navigationString';
 import FastImage from 'react-native-fast-image';
+import fontFamily from '../../styles/fontFamily';
 
 const UserProfile = props => {
   const userId = props.route.params.userId;
@@ -31,6 +34,8 @@ const UserProfile = props => {
   // console.log(userId);
   // console.log('============userId========================');
   const [userDetail, setUserDetail] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [numColumns, setNumColumns] = useState(3);
   const navigation = useNavigation();
   const getUserData = async () => {
     try {
@@ -44,6 +49,26 @@ const UserProfile = props => {
     }
   };
 
+  const getUserPosts = async () => {
+    try {
+      const postsref = firestores()
+        .collection('posts')
+        .doc(userId)
+        .collection('allposts');
+      const querySnapshot = await postsref.get();
+      const userPosts = [];
+      querySnapshot.forEach(doc => {
+        const postData = doc.data();
+        userPosts.push({...postData, id: doc.id});
+      });
+      setUserPosts(userPosts);
+      // Now userPosts array contains all posts for the user
+      // console.log('User Posts:', userPosts.length);
+    } catch (error) {
+      console.log('Error getting while getting posts of users:', error);
+    }
+  };
+
   const handleMessageScreen = userData => {
     console.log('user chat application: ', userData);
     navigation.navigate(navigationString.Message, {
@@ -52,8 +77,26 @@ const UserProfile = props => {
     });
   };
 
+  const handleImageDetail = () => {
+    Alert.alert('click');
+  };
+
+  const renderItem = ({item}) => (
+    <View style={styles.column}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => navigation.navigate('DetailPost', {postData: item})}>
+        <FastImage
+          style={styles.postImage}
+          source={{uri: item.imageUrl, priority: FastImage.priority.normal}}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
   useEffect(() => {
     getUserData();
+    getUserPosts();
   }, []);
 
   return (
@@ -156,30 +199,71 @@ const UserProfile = props => {
               </TouchableOpacity>
             </View>
           ) : null}
-          {/* <View style={styles.followbtnContainer}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => handleMessageScreen(userDetail)}>
-              <ChatIcon name="chat" size={30} color={colors.blueColor} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.followStyle} activeOpacity={0.5}>
+
+          <View style={styles.followerDetails}>
+            <View style={styles.followerContainer}>
+              <Text style={styles.followerHeading}>
+                {userPosts && userPosts.length ? (
+                  userPosts.length
+                ) : (
+                  <ActivityIndicator size="small" color="gray" />
+                )}
+              </Text>
+              <Text style={styles.followerSubHeading}>POSTS</Text>
+            </View>
+            <View style={{borderRightWidth: 1, borderRightColor: 'gray'}} />
+            <View style={styles.followerContainer}>
+              <Text style={styles.followerHeading}>12</Text>
+              <Text style={styles.followerSubHeading}>FOLLOWERS</Text>
+            </View>
+            <View style={{borderRightWidth: 1, borderRightColor: 'gray'}} />
+            <View style={styles.followerContainer}>
+              <Text style={styles.followerHeading}>22</Text>
+              <Text style={styles.followerSubHeading}>FOLLOWING</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: moderateVerticalScale(12),
+              height: moderateVerticalScale(4),
+              backgroundColor: colors.socialgray,
+              width: '100%',
+            }}
+          />
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              // marginTop: moderateVerticalScale(2),
+              paddingHorizontal: moderateScale(10),
+            }}>
+            <View
+              style={{
+                // marginVertical: moderateVerticalScale(8),
+                backgroundColor: colors.whiteColorOpacity70,
+                paddingHorizontal: moderateScale(8),
+                paddingVertical: moderateVerticalScale(6),
+              }}>
               <Text
                 style={{
-                  color: colors.whiteColor,
                   fontSize: scale(14),
-                  fontWeight: 'bold',
+                  color: colors.blackColor,
+                  fontFamily: fontFamily.semiBold,
                 }}>
-                Follow
+                Posts
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <AddressIcon
-                name="share-social"
-                size={30}
-                color={colors.blueColor}
-              />
-            </TouchableOpacity>
-          </View> */}
+            </View>
+            <FlatList
+              data={userPosts}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+              numColumns={numColumns}
+              showsVerticalScrollIndicator={false}
+              // horizontal={true} // Set this to true for row-wise display
+              // numColumns={3}
+              // horizontal={true}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -257,6 +341,47 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: moderateScale(22),
     marginTop: moderateVerticalScale(14),
+  },
+  followerDetails: {
+    marginTop: moderateScale(20),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // backgroundColor: 'red',
+    width: '100%',
+    // paddingHorizontal: moderateScale(22),
+    // alignItems: 'center',
+  },
+  followerHeading: {
+    color: colors.blackColor,
+    fontFamily: fontFamily.bold,
+    fontSize: scale(12),
+  },
+  followerSubHeading: {
+    color: colors.grayColor,
+    fontFamily: fontFamily.medium,
+    fontSize: scale(10),
+  },
+  followerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'red',
+    flex: 1,
+  },
+  column: {
+    flex: 1, // Ensure each image takes up equal space in the column
+    // margin: 2, // Add spacing between images
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 6,
+    // backgroundColor: 'black',
+  },
+  postImage: {
+    // flex: 1, // Make the image fill the available space in the column
+    // aspectRatio: 1, // Maintain the aspect ratio (square images)
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 6,
+    // padding: 8,
   },
 });
 
