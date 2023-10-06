@@ -33,6 +33,7 @@ import CustomModal from '../Notification/CustomModal';
 import fontFamily from '../../styles/fontFamily';
 import LikeCompo from '../Like/LikeCompo';
 import FastImage from 'react-native-fast-image';
+import CommentCompo from '../Comment/CommentCompo';
 
 const MemoizedFlatList = React.memo(FlatList);
 
@@ -291,8 +292,9 @@ function Home(props) {
               onLike={handleLike}
             />
             <View style={{marginHorizontal: moderateScale(25)}} />
-            <Comment name="comment-o" size={24} color={colors.blackColor} />
-            <Text style={styles.likecommentStyle}>22</Text>
+            {/* <Comment name="comment-o" size={24} color={colors.blackColor} />
+            <Text style={styles.likecommentStyle}>22</Text> */}
+            <CommentCompo postId={item.postId} postuserId={item.userId} />
           </View>
           <Share name="share" size={24} color={colors.blackColor} />
         </View>

@@ -14,4 +14,5 @@ export default {
   CreateGroup: 'CreateGroup',
   GroupChatScreen: 'GroupChatScreen',
   AllGroups: 'AllGroups',
+  COMMENT: 'Comment',
 };

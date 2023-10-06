@@ -22,6 +22,8 @@ import Edit from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import fontFamily from '../../styles/fontFamily';
 import FastImage from 'react-native-fast-image';
+import navigationString from '../../Navigation/navigationString';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 
 function Profile(props) {
   const [udetail, setUDetail] = useState(null);
@@ -32,6 +34,7 @@ function Profile(props) {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const netinfo = useNetInfo();
 
   const logoutFunction = () => {
     auth()
@@ -56,6 +59,15 @@ function Profile(props) {
       console.log('============ERROR WHILE LOG OUT========================');
       console.log(error);
       console.log('====================================');
+    }
+  };
+
+  const handleHelp = () => {
+    if (netinfo.isInternetReachable && netinfo.isConnected) {
+      Alert.alert('Online', 'You are online');
+    }
+    if (!netinfo.isInternetReachable && !netinfo.isConnected) {
+      Alert.alert('Offline', 'You are offline');
     }
   };
 
@@ -123,14 +135,20 @@ function Profile(props) {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity activeOpacity={0.5} style={styles.btn}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.btn}
+        onPress={() => navigation.navigate(navigationString.NOTIFICATION)}>
         <View style={{flexDirection: 'row'}}>
           <Edit name="notifications-none" size={27} color={colors.socialpink} />
           <Text style={styles.text}>Notification</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity activeOpacity={0.5} style={styles.btn}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.btn}
+        onPress={handleHelp}>
         <View style={{flexDirection: 'row'}}>
           <Edit name="help-outline" size={27} color={colors.socialpink} />
           <Text style={styles.text}>Help</Text>
