@@ -33,6 +33,7 @@ import imagePath from '../../constants/imagePath';
 import ThreeDotICon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import RemoveIcon from 'react-native-vector-icons/FontAwesome';
+import HeartIcon from 'react-native-vector-icons/AntDesign';
 import navigationString from '../../Navigation/navigationString';
 
 function Comment({route}) {
@@ -41,6 +42,8 @@ function Comment({route}) {
   const [commentText, setCommentText] = useState('');
   const [isloading, setIsLoading] = useState(false);
   const [comments, setCommnents] = useState([]);
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [clength, setCLength] = useState(commentLength);
   const navigation = useNavigation();
   const userId = auth().currentUser.uid;
@@ -82,7 +85,7 @@ function Comment({route}) {
 
   const deleteHandler = commentId => {
     try {
-      console.log('comment id is: ', commentId);
+      // console.log('comment id is: ', commentId);
       Alert.alert('Warning', `Are you sure to delete Comment`, [
         {
           text: 'Yes',
@@ -108,7 +111,7 @@ function Comment({route}) {
     try {
       if (commentText.length > 0) {
         Keyboard.dismiss();
-        console.log('before adding comment');
+        // console.log('before adding comment');
         setIsLoading(true);
         setCommentText('');
         handleTextInputBlur();
@@ -120,9 +123,10 @@ function Comment({route}) {
           postId,
           postuserId,
           userImage,
+          likes: [],
         });
 
-        console.log('After adding comment');
+        // console.log('After adding comment');
         // console.log(response);
         setIsLoading(false);
       } else {
@@ -145,7 +149,8 @@ function Comment({route}) {
           const temarray = [];
           snap.forEach(doc => {
             // temarray.push(doc.data());
-            temarray.push({...doc.data(), id: doc.id});
+            const likeLength = doc.data().likes.length;
+            temarray.push({...doc.data(), id: doc.id, likeLength: likeLength});
           });
           // console.log(temarray);
           temarray.sort((a, b) => b.time - a.time);
@@ -159,12 +164,76 @@ function Comment({route}) {
     }
   };
 
+  // const handleLike = async commentId => {
+  //   const loggedUser = auth().currentUser;
+  //   const postRef = firestore().collection('comments').doc(commentId);
+  //   try {
+  //     const postDoc = await postRef.get();
+  //     if (postDoc.exists) {
+  //       const postData = postDoc.data();
+  //       if (postData.hasOwnProperty('likes')) {
+  //         if (postData.likes && postData.likes.includes(userId)) {
+  //           await postRef.update({
+  //             likes: firestore.FieldValue.arrayRemove(userId),
+  //           });
+  //         } else {
+  //           // User hasn't liked the post, so like it
+  //           await postRef.update({
+  //             likes: firestore.FieldValue.arrayUnion(userId),
+  //           });
+  //         }
+  //       }
+  //       // if (!postData.hasOwnProperty('likes')) {
+  //       //   console.log('...............No Like..............');
+  //       // }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleLike = async commentId => {
+    // new code
+    const postRef = firestore().collection('comments').doc(commentId);
+    try {
+      const postDoc = await postRef.get();
+      if (postDoc.exists) {
+        const postData = postDoc.data();
+        if (postData.hasOwnProperty('likes')) {
+          let updatedLikes = [...postData.likes]; // Create a new array
+          if (postData.likes.includes(userId)) {
+            updatedLikes = updatedLikes.filter(id => id !== userId); // Remove like
+          } else {
+            updatedLikes.push(userId); // Add like
+          }
+          await postRef.update({likes: updatedLikes}); // Update the likes
+
+          // Update the state for the specific comment
+          setCommnents(prevComments =>
+            prevComments.map(comment =>
+              comment.id === commentId
+                ? {
+                    ...comment,
+                    likes: updatedLikes,
+                    likeLength: updatedLikes.length, // Update the like count
+                  }
+                : comment,
+            ),
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAllComments();
   }, []);
 
   const renderItem = ({item}) => {
     // console.log('comment id', item.id);
+    const isLikedByUser = item.likes.includes(userId);
     const postTime = item.time.toDate();
     const currentTime = new Date();
     let formattedTime = '';
@@ -241,6 +310,24 @@ function Comment({route}) {
                 color={colors.blackColor}
               />
             )}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.heartContainer}>
+          <TouchableOpacity
+            activeOpacity={0.3}
+            style={{flexDirection: 'row'}}
+            onPress={() => handleLike(item.id)}>
+            {isLikedByUser ? (
+              <HeartIcon color={colors.redColor} name="heart" size={20} />
+            ) : (
+              <HeartIcon color={colors.blackColor} name="hearto" size={20} />
+            )}
+            {/* <HeartIcon color={colors.blackColor} name="hearto" size={20} /> */}
+            <Text
+              style={{marginLeft: moderateScale(4), color: colors.blackColor}}>
+              {' '}
+              {item.likeLength}{' '}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -409,6 +496,12 @@ const styles = StyleSheet.create({
   },
   bottomStyle: {
     marginVertical: moderateVerticalScale(8),
+  },
+  heartContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: moderateScale(6),
   },
 });
 
