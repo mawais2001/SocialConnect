@@ -36,11 +36,12 @@ import RemoveIcon from 'react-native-vector-icons/FontAwesome';
 import navigationString from '../../Navigation/navigationString';
 
 function Comment({route}) {
-  const {postId, postuserId} = route.params;
+  const {postId, postuserId, commentLength} = route.params;
   const [isTextInputFocused, setIsTextInputFocused] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [isloading, setIsLoading] = useState(false);
   const [comments, setCommnents] = useState([]);
+  const [clength, setCLength] = useState(commentLength);
   const navigation = useNavigation();
   const userId = auth().currentUser.uid;
   const userName = auth().currentUser.displayName;
@@ -149,6 +150,7 @@ function Comment({route}) {
           // console.log(temarray);
           temarray.sort((a, b) => b.time - a.time);
           setCommnents(temarray);
+          setCLength(temarray.length);
           setIsLoading(false);
         });
     } catch (error) {
@@ -255,7 +257,10 @@ function Comment({route}) {
           <View style={{flex: 0.1}} />
           <View style={styles.box1}>
             <View style={styles.headContainer}>
-              <Text style={styles.heading}>Comments</Text>
+              <Text style={styles.heading}>
+                Comments
+                <Text style={styles.subheading}>{` (${clength})`}</Text>
+              </Text>
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => navigation.goBack()}>
@@ -351,6 +356,11 @@ const styles = StyleSheet.create({
   heading: {
     color: colors.blackColor,
     fontSize: scale(16),
+    fontFamily: fontFamily.semiBold,
+  },
+  subheading: {
+    color: colors.blackOpacity70,
+    fontSize: scale(14),
     fontFamily: fontFamily.semiBold,
   },
   headContainer: {

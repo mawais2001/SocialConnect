@@ -16,10 +16,6 @@ const CommentCompo = ({postId, postuserId}) => {
     try {
       const commentsRef = firestore().collection('comments');
       const query = commentsRef.where('postId', '==', postId);
-      // const querySnapshot = await query.get();
-      // const commentCount = querySnapshot.size;
-      // setCommentLength(commentCount);
-
       let commentCount = 0;
       query.onSnapshot(querySnapshot => {
         commentCount = querySnapshot.size;
@@ -52,6 +48,7 @@ const CommentCompo = ({postId, postuserId}) => {
           navigation.navigate(navigationString.COMMENT, {
             postId,
             postuserId,
+            commentLength,
           })
         }>
         <Comment name="comment-o" size={24} color={colors.blackColor} />
