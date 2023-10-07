@@ -28,6 +28,7 @@ export default {
   otp2: require('../assets/images/otp2.jpg'),
   report: require('../assets/images/report.png'),
   groupavatar: require('../assets/images/groupavatar.png'),
+  addpost: require('../assets/images/addpost.png'),
   avatar: require('../assets/images/avatar.jpg'),
   avatarImage:
     'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png',

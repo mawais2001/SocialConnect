@@ -108,15 +108,43 @@ function Comment({route}) {
     }
   };
 
+  // const handleAddComment = async () => {
+  //   try {
+  //     if (commentText.length > 0) {
+  //       Keyboard.dismiss();
+  //       // console.log('before adding comment');
+  //       setIsLoading(true);
+  //       setCommentText('');
+  //       handleTextInputBlur();
+  //       const response = await firestore().collection('comments').add({
+  //         text: commentText,
+  //         time: new Date(),
+  //         userId,
+  //         userName,
+  //         postId,
+  //         postuserId,
+  //         userImage,
+  //         likes: [],
+  //       });
+
+  //       // console.log('After adding comment');
+  //       // console.log(response);
+  //       setIsLoading(false);
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     console.log('Error while Adding Comment on Post: ', error);
+  //   }
+  // };
+
   const handleAddComment = async () => {
     try {
       if (commentText.length > 0) {
         Keyboard.dismiss();
         // console.log('before adding comment');
-        setIsLoading(true);
-        setCommentText('');
-        handleTextInputBlur();
-        const response = await firestore().collection('comments').add({
+        const newComment = {
           text: commentText,
           time: new Date(),
           userId,
@@ -125,11 +153,16 @@ function Comment({route}) {
           postuserId,
           userImage,
           likes: [],
-        });
+        };
 
-        // console.log('After adding comment');
-        // console.log(response);
-        setIsLoading(false);
+        // Update the local state to immediately display the new comment
+        setCommnents([...comments, newComment]);
+        setCLength(clength + 1);
+        setCommentText('');
+        handleTextInputBlur();
+
+        // Add the comment to Firestore
+        await firestore().collection('comments').add(newComment);
       } else {
         return null;
       }
@@ -235,7 +268,8 @@ function Comment({route}) {
   const renderItem = ({item}) => {
     // console.log('comment id', item.id);
     const isLikedByUser = item.likes.includes(userId);
-    const postTime = item.time.toDate();
+    // const postTime = item.time.toDate();
+    const postTime = item.time && item.time.toDate ? item.time.toDate() : null;
     const currentTime = new Date();
     let formattedTime = '';
     const monthNames = [
@@ -252,26 +286,48 @@ function Comment({route}) {
       'Nov',
       'Dec',
     ];
-    if (
-      postTime <= currentTime &&
-      postTime >=
-        new Date(
-          currentTime.getFullYear(),
-          currentTime.getMonth(),
-          currentTime.getDate(),
-          0,
-          0,
-          0,
-        )
-    ) {
-      formattedTime = postTime.toLocaleTimeString();
-      // console.log();
-    } else {
-      // formattedTime = postTime.toLocaleDateString();
-      formattedTime = `${postTime.getDate()} ${
-        monthNames[postTime.getMonth()]
-      } ${postTime.getFullYear()}`;
+    // if (
+    //   postTime <= currentTime &&
+    //   postTime >=
+    //     new Date(
+    //       currentTime.getFullYear(),
+    //       currentTime.getMonth(),
+    //       currentTime.getDate(),
+    //       0,
+    //       0,
+    //       0,
+    //     )
+    // ) {
+    //   formattedTime = postTime.toLocaleTimeString();
+    //   // console.log();
+    // } else {
+    //   // formattedTime = postTime.toLocaleDateString();
+    //   formattedTime = `${postTime.getDate()} ${
+    //     monthNames[postTime.getMonth()]
+    //   } ${postTime.getFullYear()}`;
+    // }
+
+    if (postTime) {
+      if (
+        postTime <= currentTime &&
+        postTime >=
+          new Date(
+            currentTime.getFullYear(),
+            currentTime.getMonth(),
+            currentTime.getDate(),
+            0,
+            0,
+            0,
+          )
+      ) {
+        formattedTime = postTime.toLocaleTimeString();
+      } else {
+        formattedTime = `${postTime.getDate()} ${
+          monthNames[postTime.getMonth()]
+        } ${postTime.getFullYear()}`;
+      }
     }
+
     return (
       <View style={{}}>
         <View style={styles.commentst}>

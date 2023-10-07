@@ -176,6 +176,11 @@ const UserProfile = props => {
 
   return (
     <View style={styles.container}>
+      {/* <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      /> */}
       <View style={styles.profileImgConatiner}>
         {userDetail && userDetail.profilePicture ? (
           <FastImage
@@ -399,10 +404,11 @@ const styles = StyleSheet.create({
   headerCompoStyle: {
     backgroundColor: colors.blackOpacity20,
     paddingHorizontal: moderateScale(20),
-    paddingVertical: moderateVerticalScale(8),
+    paddingVertical: moderateVerticalScale(6),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // marginTop: moderateVerticalScale(22),
   },
   nameContainerStyle: {
     alignItems: 'center',

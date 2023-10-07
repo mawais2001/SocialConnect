@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import colors from '../../styles/colors';
 import {
@@ -30,6 +31,11 @@ function DetailPost(props) {
       source={{
         uri: postData.imageUrl ? postData.imageUrl : imagePath.blankimage,
       }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <View
         style={{
           backgroundColor: colors.blackOpacity70,
@@ -38,7 +44,7 @@ function DetailPost(props) {
           padding: moderateScale(10),
           borderRadius: moderateScale(12),
           alignItems: 'center',
-          marginTop: moderateVerticalScale(18),
+          marginTop: moderateVerticalScale(26),
         }}>
         <View
           style={{

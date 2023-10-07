@@ -9,6 +9,10 @@ import * as Screens from '../Screens/index';
 // import { moderateScale, width, moderateScaleVertical } from '../styles/responsiveSize';
 import imagePath from '../constants/imagePath';
 import navigationString from './navigationString';
+import AddIcon from 'react-native-vector-icons/MaterialIcons';
+import HomeIcon from 'react-native-vector-icons/Ionicons';
+import SearchIcon from 'react-native-vector-icons/FontAwesome';
+import SearchIcontwo from 'react-native-vector-icons/Feather';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -37,11 +41,20 @@ const TabRoutes = props => {
         options={{
           tabBarIcon: ({focused}) => {
             return focused ? (
-              <Image source={imagePath.firstActiveIcon} />
+              // <Image
+              //   source={imagePath.firstActiveIcon}
+              //   style={{tintColor: colors.socialpink}}
+              // />
+              <HomeIcon name="home" color={colors.socialpink} size={25} />
             ) : (
-              <Image
-                source={imagePath.firstInActiveIcon}
-                style={{tintColor: colors.grayColor}}
+              // <Image
+              //   source={imagePath.firstInActiveIcon}
+              //   style={{tintColor: colors.grayColor}}
+              // />
+              <HomeIcon
+                name="home-outline"
+                color={colors.grayColor}
+                size={25}
               />
             );
           },
@@ -53,15 +66,13 @@ const TabRoutes = props => {
         options={{
           tabBarIcon: ({focused}) => {
             return focused ? (
-              <Image
-                source={imagePath.secondActiveIcon}
-                style={{tintColor: 'red'}}
-              />
+              // <Image
+              //   source={imagePath.secondActiveIcon}
+              //   style={{tintColor: colors.socialpink}}
+              // />
+              <SearchIcon name="search" color={colors.socialpink} size={25} />
             ) : (
-              <Image
-                source={imagePath.secondInActiveIcon}
-                style={{tintColor: colors.grayColor}}
-              />
+              <SearchIcontwo name="search" color={colors.grayColor} size={25} />
             );
           },
         }}
@@ -72,15 +83,21 @@ const TabRoutes = props => {
         options={{
           tabBarIcon: ({focused}) => {
             return focused ? (
-              <Image
-                source={imagePath.thirdActiveIcon}
-                style={{tintColor: 'red'}}
-              />
+              // <Image
+              //   source={imagePath.thirdActiveIcon}
+              //   style={{tintColor: 'red'}}
+              // />
+              <AddIcon name="add-circle" color={colors.socialpink} size={34} />
             ) : (
-              <Image
-                source={imagePath.thirdInActiveIcon}
-                style={{tintColor: colors.grayColor}}
+              <AddIcon
+                name="add-circle-outline"
+                color={colors.grayColor}
+                size={34}
               />
+              // <Image
+              //   source={imagePath.thirdInActiveIcon}
+              //   style={{tintColor: colors.grayColor, height: 22, width: 22}}
+              // />
             );
           },
         }}
@@ -91,14 +108,16 @@ const TabRoutes = props => {
         options={{
           tabBarIcon: ({focused}) => {
             return focused ? (
-              <Image
-                source={imagePath.fourthActiveIcon}
-                style={{tintColor: 'red'}}
+              <HomeIcon
+                name="notifications"
+                color={colors.socialpink}
+                size={25}
               />
             ) : (
-              <Image
-                source={imagePath.fourthInActiveIcon}
-                style={{tintColor: colors.grayColor}}
+              <HomeIcon
+                name="notifications-outline"
+                color={colors.grayColor}
+                size={25}
               />
             );
           },
@@ -110,11 +129,13 @@ const TabRoutes = props => {
         options={{
           tabBarIcon: ({focused}) => {
             return focused ? (
-              <Image
-                source={imagePath.fifthActiveIcon}
-                style={{tintColor: 'red'}}
-              />
+              <SearchIcon name="user" color={colors.socialpink} size={25} />
             ) : (
+              // <Image
+              //   source={imagePath.fifthActiveIcon}
+              //   style={{tintColor: colors.socialpink}}
+              // />
+              // <SearchIcon name="user-o" color={colors.grayColor} size={25} />
               <Image
                 source={imagePath.fifthInActiveIcon}
                 style={{tintColor: colors.grayColor}}
