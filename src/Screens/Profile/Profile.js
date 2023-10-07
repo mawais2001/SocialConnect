@@ -79,6 +79,7 @@ function Profile(props) {
         .get();
       if (udata) {
         setUDetail(udata);
+        // console.log(udetail);
         setUserDataLoading(false);
       }
     } catch (error) {
@@ -104,6 +105,60 @@ function Profile(props) {
         />
         <Text style={styles.profileNameStyle}>{userData.displayName}</Text>
       </View>
+      {/* 
+      {udetail && udetail._data.follower ? (
+        <Text>{udetail._data.follower.length}</Text>
+      ) : (
+        <ActivityIndicator
+          style={styles.loadingIndicator}
+          size="small"
+          color={colors.socialpink}
+        />
+      )} */}
+
+      <View style={styles.followerDetails}>
+        {/* <View style={styles.followerContainer}>
+          <Text style={styles.followerHeading}>
+            {udetail && udetail._data.follower ? (
+              udetail._data.follower.length
+            ) : (
+              <ActivityIndicator size="small" color="gray" />
+            )}
+          </Text>
+          <Text style={styles.followerSubHeading}>POSTS</Text>
+        </View> */}
+        {/* <View
+          style={{
+            borderRightWidth: 1,
+            flex: 1,
+            borderRightColor: colors.socialpink,
+          }}
+        /> */}
+        <View style={styles.followerContainer}>
+          <Text style={styles.followerHeading}>
+            {udetail && udetail._data.following ? (
+              udetail._data.following.length
+            ) : (
+              <ActivityIndicator size="small" color={colors.socialpink} />
+            )}
+          </Text>
+          <Text style={styles.followerSubHeading}>FOLLOWERS</Text>
+        </View>
+        <View
+          style={{borderRightWidth: 1, borderRightColor: colors.socialpink}}
+        />
+        <View style={styles.followerContainer}>
+          <Text style={styles.followerHeading}>
+            {udetail && udetail._data.follower ? (
+              udetail._data.follower.length
+            ) : (
+              <ActivityIndicator size="small" color={colors.socialpink} />
+            )}
+          </Text>
+          <Text style={styles.followerSubHeading}>FOLLOWING</Text>
+        </View>
+      </View>
+
       {/* <TouchableOpacity
         activeOpacity={0.5}
         style={styles.btn}
@@ -189,9 +244,9 @@ const styles = StyleSheet.create({
   head: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: moderateScale(24),
-
-    // backgroundColor: 'red'
+    paddingTop: moderateScale(24),
+    marginBottom: moderateVerticalScale(12),
+    // backgroundColor: 'red',
   },
   profileNameStyle: {
     fontSize: scale(17),
@@ -219,6 +274,32 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     // fontWeight: '500',
     marginLeft: moderateScale(18),
+  },
+  followerDetails: {
+    marginBottom: moderateScale(20),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // backgroundColor: 'red',
+    width: '100%',
+    // paddingHorizontal: moderateScale(22),
+    // alignItems: 'center',
+  },
+  followerHeading: {
+    color: colors.socialpink,
+    fontFamily: fontFamily.bold,
+    fontSize: scale(13),
+  },
+  followerSubHeading: {
+    color: colors.socialpink,
+    fontFamily: fontFamily.semiBold,
+    // fontWeight: '600',
+    fontSize: scale(10),
+  },
+  followerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'red',
+    flex: 1,
   },
 });
 

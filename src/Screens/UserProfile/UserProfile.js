@@ -27,6 +27,7 @@ import ChatIcon from 'react-native-vector-icons/MaterialIcons';
 import navigationString from '../../Navigation/navigationString';
 import FastImage from 'react-native-fast-image';
 import fontFamily from '../../styles/fontFamily';
+import auth from '@react-native-firebase/auth';
 
 const UserProfile = props => {
   const userId = props.route.params.userId;
@@ -39,13 +40,32 @@ const UserProfile = props => {
   const [follow, setFollow] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const navigation = useNavigation();
+  // const getUserData = async () => {
+  //   try {
+  //     const udata = await firestores().collection('users').doc(userId).get();
+  //     if (udata) {
+  //       // console.log(udata);
+  //       setUserDetail(udata._data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const getUserData = async () => {
+    const loggedUserUid = auth().currentUser.uid;
     try {
-      const udata = await firestores().collection('users').doc(userId).get();
-      if (udata) {
-        // console.log(udata);
-        setUserDetail(udata._data);
-      }
+      const udata = await firestores()
+        .collection('users')
+        .doc(userId)
+        .onSnapshot(querySnapshot => {
+          // console.log('querySnapshot: ', querySnapshot.data());
+          const userAllDetails = querySnapshot.data();
+          const isFollow =
+            userAllDetails?.follower?.includes(loggedUserUid) || false;
+          setFollow(isFollow);
+          setUserDetail(userAllDetails);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -72,29 +92,82 @@ const UserProfile = props => {
   };
 
   const handleMessageScreen = userData => {
-    console.log('user chat application: ', userData);
+    // console.log('user chat application: ', userData);
     navigation.navigate(navigationString.Message, {
       userData: userData,
       userId: userId,
     });
   };
 
-  const handleFollow = () => {
-    Alert.alert('click');
+  const handleFollower = async () => {
+    const userRef = firestores().collection('users').doc(userId);
+    const loggedUserId = auth().currentUser.uid;
+    try {
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('follower')) {
+          let updatedFollowers = [...fuserData.follower]; // Create a new array
+          if (fuserData.follower.includes(loggedUserId)) {
+            updatedFollowers = updatedFollowers.filter(
+              id => id !== loggedUserId,
+            ); // Remove like
+          } else {
+            updatedFollowers.push(loggedUserId); // Add like
+          }
+          await userRef.update({follower: updatedFollowers}); // Update the likes
+          // setFollowerCount(updatedFollowers.length);
+        }
+      }
+    } catch (error) {
+      console.log('Error in follower function: ', error);
+    }
+  };
+  const handleFollowing = async () => {
+    // userId
+    const loggedUserId = auth().currentUser.uid;
+    const userRef = firestores().collection('users').doc(loggedUserId);
+    try {
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('following')) {
+          let updatedFollowers = [...fuserData.following]; // Create a new array
+          if (fuserData.following.includes(userId)) {
+            updatedFollowers = updatedFollowers.filter(id => id !== userId); // Remove like
+          } else {
+            updatedFollowers.push(userId); // Add like
+          }
+          await userRef.update({following: updatedFollowers}); // Update the likes
+          // setFollowerCount(updatedFollowers.length);
+        }
+      }
+    } catch (error) {
+      console.log('Error in follower function: ', error);
+    }
   };
 
-  const renderItem = ({item}) => (
-    <View style={styles.column}>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={() => navigation.navigate('DetailPost', {postData: item})}>
-        <FastImage
-          style={styles.postImage}
-          source={{uri: item.imageUrl, priority: FastImage.priority.normal}}
-        />
-      </TouchableOpacity>
-    </View>
-  );
+  const handleFollow = async () => {
+    await handleFollower();
+    await handleFollowing();
+  };
+
+  const renderItem = ({item}) => {
+    return (
+      <View style={styles.column}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.navigate('DetailPost', {postData: item})}>
+          <FastImage
+            style={styles.postImage}
+            source={{uri: item.imageUrl, priority: FastImage.priority.normal}}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   useEffect(() => {
     getUserData();
@@ -182,8 +255,14 @@ const UserProfile = props => {
                 onPress={() => handleMessageScreen(userDetail)}>
                 <ChatIcon name="chat" size={30} color={colors.blueColor} />
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={styles.followStyle}
+                style={[
+                  styles.followStyle,
+                  {
+                    backgroundColor: follow ? colors.gray2 : colors.blueColor,
+                  },
+                ]}
                 activeOpacity={0.5}
                 onPress={handleFollow}>
                 <Text
@@ -192,9 +271,10 @@ const UserProfile = props => {
                     fontSize: scale(14),
                     fontWeight: 'bold',
                   }}>
-                  Follow
+                  {!!follow ? 'Following' : 'Follow'}
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity>
                 <AddressIcon
                   name="share-social"
@@ -218,12 +298,26 @@ const UserProfile = props => {
             </View>
             <View style={{borderRightWidth: 1, borderRightColor: 'gray'}} />
             <View style={styles.followerContainer}>
-              <Text style={styles.followerHeading}>12</Text>
+              <Text style={styles.followerHeading}>
+                {' '}
+                {userDetail && userDetail.follower ? (
+                  userDetail.follower.length
+                ) : (
+                  <ActivityIndicator size="small" color="gray" />
+                )}{' '}
+              </Text>
               <Text style={styles.followerSubHeading}>FOLLOWERS</Text>
             </View>
             <View style={{borderRightWidth: 1, borderRightColor: 'gray'}} />
             <View style={styles.followerContainer}>
-              <Text style={styles.followerHeading}>22</Text>
+              <Text style={styles.followerHeading}>
+                {' '}
+                {userDetail && userDetail.following ? (
+                  userDetail.following.length
+                ) : (
+                  <ActivityIndicator size="small" color="gray" />
+                )}{' '}
+              </Text>
               <Text style={styles.followerSubHeading}>FOLLOWING</Text>
             </View>
           </View>
