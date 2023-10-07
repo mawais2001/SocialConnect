@@ -127,6 +127,8 @@ function Register(props) {
         address: address,
         phone: userData.phoneNumber,
         profilePicture: imgUploadResponse,
+        follower: [],
+        following: [],
       });
       const token = await getToken();
       if (token) {

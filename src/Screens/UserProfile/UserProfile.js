@@ -36,6 +36,8 @@ const UserProfile = props => {
   const [userDetail, setUserDetail] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [numColumns, setNumColumns] = useState(3);
+  const [follow, setFollow] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
   const navigation = useNavigation();
   const getUserData = async () => {
     try {
@@ -77,7 +79,7 @@ const UserProfile = props => {
     });
   };
 
-  const handleImageDetail = () => {
+  const handleFollow = () => {
     Alert.alert('click');
   };
 
@@ -180,7 +182,10 @@ const UserProfile = props => {
                 onPress={() => handleMessageScreen(userDetail)}>
                 <ChatIcon name="chat" size={30} color={colors.blueColor} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.followStyle} activeOpacity={0.5}>
+              <TouchableOpacity
+                style={styles.followStyle}
+                activeOpacity={0.5}
+                onPress={handleFollow}>
                 <Text
                   style={{
                     color: colors.whiteColor,
