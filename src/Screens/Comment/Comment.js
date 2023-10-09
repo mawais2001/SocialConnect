@@ -329,7 +329,7 @@ function Comment({route}) {
     }
 
     return (
-      <View style={{}}>
+      <View style={{flex: 1}}>
         <View style={styles.commentst}>
           <View style={{marginRight: moderateScale(10)}}>
             <TouchableOpacity onPress={() => profileNaviHandler(item)}>
@@ -352,15 +352,19 @@ function Comment({route}) {
           </View>
           <TouchableOpacity
             activeOpacity={0.5}
-            style={{paddingLeft: moderateScale(10)}}
-            onPress={() => deleteHandler(item.id)}>
+            style={{paddingLeft: moderateScale(10)}}>
             {/* <ThreeDotICon
               name="dots-horizontal"
               size={25}
               color={colors.blackColor}
             /> */}
             {userId == item.userId ? (
-              <FeatherIcon name="delete" size={18} color={colors.blackColor} />
+              <FeatherIcon
+                name="delete"
+                size={18}
+                color={colors.blackColor}
+                onPress={() => deleteHandler(item.id)}
+              />
             ) : (
               <ThreeDotICon
                 name="dots-horizontal"
@@ -393,47 +397,59 @@ function Comment({route}) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <StatusBar hidden />
-          <View style={{flex: 0.1}} />
-          <View style={styles.box1}>
-            <View style={styles.headContainer}>
-              <Text style={styles.heading}>
-                Comments
-                <Text style={styles.subheading}>{` (${clength})`}</Text>
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => navigation.goBack()}>
-                <RemoveIcon name="remove" size={22} color={colors.blackColor} />
-              </TouchableOpacity>
-            </View>
-            {isloading ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}>
-                <ActivityIndicator size="large" color={colors.socialblue} />
-              </View>
-            ) : (
-              <View style={styles.commentContainerStyle}>
-                <FlatList
-                  data={comments}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  showsVerticalScrollIndicator={false}
-                  ItemSeparatorComponent={<View style={styles.bottomStyle} />}
-                />
-              </View>
-            )}
-            {/* <View style={styles.commentContainerStyle}>
+    // <KeyboardAvoidingView
+    //   style={styles.container}
+    //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
+    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View style={styles.container}>
+      <StatusBar hidden />
+      <View style={{flex: 0.1}} />
+      <View style={styles.box1}>
+        <View style={styles.headContainer}>
+          <Text style={styles.heading}>
+            Comments
+            <Text style={styles.subheading}>{` (${clength})`}</Text>
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.goBack()}>
+            <RemoveIcon name="remove" size={22} color={colors.blackColor} />
+          </TouchableOpacity>
+        </View>
+        {isloading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0)',
+            }}>
+            <ActivityIndicator size="large" color={colors.socialblue} />
+          </View>
+        ) : (
+          <View style={styles.commentContainerStyle}>
+            <ScrollView
+              vertical={true}
+              showsVerticalScrollIndicator={false}
+              horizontal={false}
+              nestedScrollEnabled={true}
+              // scrollEnabled={false}
+              contentContainerStyle={{flexGrow: 1}}>
+              <FlatList
+                horizontal={false}
+                data={comments}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={<View style={styles.bottomStyle} />}
+                scrollEnabled={false}
+                nestedScrollEnabled={true}
+              />
+            </ScrollView>
+          </View>
+        )}
+        {/* <View style={styles.commentContainerStyle}>
               <FlatList
                 data={comments}
                 renderItem={renderItem}
@@ -442,54 +458,54 @@ function Comment({route}) {
                 ItemSeparatorComponent={<View style={styles.bottomStyle} />}
               />
             </View> */}
-          </View>
+      </View>
 
-          <View
-            style={{
-              flex: 0.1,
+      <View
+        style={{
+          flex: 0.1,
+          backgroundColor: colors.whiteColor,
+          paddingBottom: isTextInputFocused ? 16 : 0,
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <TextInputCompo
+            placeholder="Type a comment..."
+            inputStyle={{
+              //   width: '85%',
               backgroundColor: colors.whiteColor,
-              paddingBottom: isTextInputFocused ? 16 : 0,
-            }}>
-            <View style={{flexDirection: 'row'}}>
-              <TextInputCompo
-                placeholder="Type a comment..."
-                inputStyle={{
-                  //   width: '85%',
-                  backgroundColor: colors.whiteColor,
-                  borderRadius: 0,
-                  borderColor: colors.gray2,
-                  borderTopWidth: 0.7,
-                  flex: 1,
-                }}
-                placeholderTextColor={colors.blackOpacity70}
-                textStyle={{color: colors.blackColor}}
-                onFocus={handleTextInputFocus}
-                onBlur={handleTextInputBlur}
-                value={commentText}
-                onChangeText={text => setCommentText(text)}
-              />
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={{
-                  flex: 0.2,
-                  backgroundColor: colors.socialpinklight,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderColor: colors.gray2,
-                  borderTopWidth: 0.7,
-                }}
-                onPress={handleAddComment}>
-                <ForwardIcon
-                  name="arrow-forward"
-                  size={24}
-                  color={colors.blackColor}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+              borderRadius: 0,
+              borderColor: colors.gray2,
+              borderTopWidth: 0.7,
+              flex: 1,
+            }}
+            placeholderTextColor={colors.blackOpacity70}
+            textStyle={{color: colors.blackColor}}
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            value={commentText}
+            onChangeText={text => setCommentText(text)}
+          />
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={{
+              flex: 0.2,
+              backgroundColor: colors.socialpinklight,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderColor: colors.gray2,
+              borderTopWidth: 0.7,
+            }}
+            onPress={handleAddComment}>
+            <ForwardIcon
+              name="arrow-forward"
+              size={24}
+              color={colors.blackColor}
+            />
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      </View>
+    </View>
+    // </TouchableWithoutFeedback>
+    // </KeyboardAvoidingView>
   );
 }
 

@@ -29,7 +29,7 @@ const getDeviceFcmToken = async () => {
       if (fcmtokenDoc.exists) {
         const fcmToken = fcmtokenDoc.data().token;
         await AsyncStorage.setItem('fcmToken', fcmToken);
-        console.log('new fcm token:', fcmToken);
+        // console.log('new fcm token:', fcmToken);
       } else {
         const fcmToken = await messaging().getToken();
         await AsyncStorage.setItem('fcmToken', fcmToken);

@@ -44,7 +44,7 @@ function DetailPost(props) {
           padding: moderateScale(10),
           borderRadius: moderateScale(12),
           alignItems: 'center',
-          marginTop: moderateVerticalScale(26),
+          marginTop: moderateVerticalScale(36),
         }}>
         <View
           style={{

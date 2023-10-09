@@ -155,13 +155,18 @@ function GroupChatScreen(props) {
   return (
     <View style={styles.container}>
       <View style={styles.headerStyle}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 1,
+          }}>
           <TouchableOpacity activeOpacity={0.5} onPress={handleNavigate}>
             <BackIcon name="arrow-back" size={22} color={colors.socialpink} />
           </TouchableOpacity>
           <Image style={styles.imageStyle} source={imagePath.groupavatar} />
         </View>
-        <View>
+        <View style={{flex: 1, alignItems: 'center'}}>
           <Text
             style={{
               fontSize: scale(16),
@@ -171,7 +176,7 @@ function GroupChatScreen(props) {
             {groupdata.groupName}
           </Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity style={{flex: 1, alignItems: 'flex-end'}}>
           <ThreeDotIcon
             name="dots-three-horizontal"
             size={18}

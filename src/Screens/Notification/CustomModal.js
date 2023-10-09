@@ -60,9 +60,9 @@ const CustomModal = ({
                 .collection('allposts')
                 .doc(postData.postId)
                 .delete();
-              console.log('Post successfully deleted!');
+              // console.log('Post successfully deleted!');
               await storage().refFromURL(postData.imageUrl).delete();
-              console.log('Image successfully deleted!');
+              // console.log('Image successfully deleted!');
               setIsLoading(false);
               onDeleteSuccess();
               closeModal();

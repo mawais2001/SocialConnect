@@ -219,12 +219,12 @@ const CreateGroup = props => {
             <TextInputCompo
               placeholder="Enter Group Name"
               placeholderTextColor={colors.blackOpacity70}
-              inputStyle={{backgroundColor: colors.whiteColor, width: '50%'}}
+              inputStyle={{backgroundColor: colors.whiteColor, width: '80%'}}
               onChangeText={text => setGroupName(text)}
               value={groupName}
               textStyle={{color: colors.blackColor}}
             />
-            <View />
+            {/* <View /> */}
             {/* <View>
             </View> */}
           </View>

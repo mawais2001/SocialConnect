@@ -42,18 +42,18 @@ function AllGroups(props) {
           .collection('groups')
           .where('participants', 'array-contains', userUid)
           .get();
-        console.log('============querySnapshot========================');
-        console.log(querySnapshot);
-        console.log('====================================');
+        // console.log('============querySnapshot========================');
+        // console.log(querySnapshot);
+        // console.log('====================================');
         const groups = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
 
         setUserGroups(groups);
-        console.log('====================================');
-        console.log(groups);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log(groups);
+        // console.log('====================================');
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
