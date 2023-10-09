@@ -38,7 +38,7 @@ const CommentCompo = ({postId, postuserId}) => {
     //     unsubscribe();
     //   }
     // };
-  }, []);
+  }, [postId]);
 
   return (
     <View style={styles.container}>

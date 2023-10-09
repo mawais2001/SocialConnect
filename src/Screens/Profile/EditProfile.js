@@ -9,6 +9,7 @@ import {
   TextInput,
   PermissionsAndroid,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   moderateScale,
@@ -40,11 +41,26 @@ function EditProfile(props) {
   );
   const [imgData, setImgData] = useState(null);
   const [err, setErr] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // console.log('============userDetail START========================');
   // console.log(userDetail);
   // console.log('============userDetail END========================');
   const navigation = useNavigation();
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
+        <ActivityIndicator size="large" color={colors.socialpink} />
+      </View>
+    );
+  }
 
   const handleImagePicker = async () => {
     try {
@@ -190,8 +206,10 @@ function EditProfile(props) {
       }
 
       if (!imgData) {
-        setErr('Updating your profile, please wait...');
+        // setErr('Updating your profile, please wait...');
+        setIsLoading(true);
         const partialProfileUpdating = await editPartialProfile();
+        setIsLoading(false);
         if (partialProfileUpdating) {
           setErr('Profile is edited successfully!');
           setTimeout(() => {
@@ -201,7 +219,8 @@ function EditProfile(props) {
         }
       }
 
-      setErr('Updating your profile, please wait...');
+      // setErr('Updating your profile, please wait...');
+      setIsLoading(true);
 
       const updateImgRes = await updatingImage();
 
@@ -209,6 +228,7 @@ function EditProfile(props) {
         const editFullProfileResponse = await editFullProfile(updateImgRes);
 
         if (editFullProfileResponse) {
+          setIsLoading(false);
           setErr('Profile is edited successfully!');
           setTimeout(() => {
             setErr('');

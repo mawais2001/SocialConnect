@@ -9,8 +9,6 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import colors from '../../styles/colors';
 import Like from 'react-native-vector-icons/AntDesign';
-import Comment from 'react-native-vector-icons/FontAwesome';
-import Share from 'react-native-vector-icons/Entypo';
 
 const LikeCompo = ({postId, postuserId, onLike}) => {
   const [liked, setLiked] = useState(false);
@@ -25,26 +23,40 @@ const LikeCompo = ({postId, postuserId, onLike}) => {
       .doc(postId);
 
     try {
-      const postDoc = await postRef.get();
-      if (postDoc.exists) {
-        const postData = postDoc.data();
-        if (postData.hasOwnProperty('likes')) {
-          const currentLikesCount = postData.likes.length;
-          setLikesCount(currentLikesCount);
-          if (postData.likes && postData.likes.includes(loggedUser.uid)) {
-            setLiked(true);
-          } else {
-            setLiked(false);
+      // const postDoc = await postRef.get();
+      // if (postDoc.exists) {
+      //   const postData = postDoc.data();
+      //   if (postData.hasOwnProperty('likes')) {
+      //     const currentLikesCount = postData.likes.length;
+      //     setLikesCount(currentLikesCount);
+      //     if (postData.likes && postData.likes.includes(loggedUser.uid)) {
+      //       setLiked(true);
+      //     } else {
+      //       setLiked(false);
+      //     }
+      //   }
+      // }
+      postRef.onSnapshot(snapshot => {
+        if (snapshot.exists) {
+          const postData = snapshot.data();
+          if (postData.hasOwnProperty('likes')) {
+            const currentLikesCount = postData.likes.length;
+            setLikesCount(currentLikesCount);
+            if (postData.likes && postData.likes.includes(loggedUser.uid)) {
+              setLiked(true);
+            } else {
+              setLiked(false);
+            }
           }
         }
-      }
+      });
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
     getLikesDetail();
-  }, [likesCount, liked]);
+  }, [likesCount, liked, postId, postuserId]);
 
   const handleLike = async () => {
     const loggedUser = auth().currentUser;

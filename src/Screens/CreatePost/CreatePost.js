@@ -146,7 +146,7 @@ function CreatePost(props) {
         if (userPostsDoc.exists) {
           const postData = userPostsDoc.data();
           setIsLoading(false);
-          await SendNotificationAll({
+          SendNotificationAll({
             title: title,
             picUrl: downloadURL,
             postId: userPostsRef.id,

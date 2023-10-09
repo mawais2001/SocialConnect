@@ -322,8 +322,18 @@ function Home(props) {
     );
   };
 
-  const handleDeleteSuccess = () => {
-    getMyPostsData();
+  const handleDeleteSuccess = async () => {
+    try {
+      const updatedPostList = postList.filter(
+        post => post.postId !== selectedItem.postId,
+      );
+      setPostList(updatedPostList);
+      setSelectedItem(null); //
+      await getMyPostsData();
+    } catch (error) {
+      console.log('Error in deleting post: ', error);
+    }
+    // getMyPostsData();
   };
 
   const handleLike = () => {
