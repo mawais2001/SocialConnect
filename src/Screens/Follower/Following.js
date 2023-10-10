@@ -30,7 +30,7 @@ import TextInputCompo from '../../Components/TextInputCompo';
 import ButtonCompo from '../../Components/ButtonCompo';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-function Followers(props) {
+function Following(props) {
   //   console.log('props:', props.route.params.followersList);
   const followerList = props.route.params.followersList;
   //   console.log('followerList is: ', followerList);
@@ -300,7 +300,7 @@ function Followers(props) {
             source={imagePath.icBack}
           />
         </TouchableOpacity>
-        <Text style={styles.headerHeadingStyle}>Followers List</Text>
+        <Text style={styles.headerHeadingStyle}>Following List</Text>
       </View>
       <View style={styles.mainContainer}>
         <View
@@ -540,4 +540,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Followers;
+export default Following;

@@ -16,4 +16,5 @@ export default {
   AllGroups: 'AllGroups',
   COMMENT: 'Comment',
   Followers: 'Followers',
+  Following: 'Following',
 };

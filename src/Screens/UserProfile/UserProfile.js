@@ -200,11 +200,7 @@ const UserProfile = props => {
 
   return (
     <View style={styles.container}>
-      {/* <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      /> */}
+      <StatusBar backgroundColor={colors.whiteColor} barStyle="dark-content" />
       <View style={styles.profileImgConatiner}>
         {userDetail && userDetail.profilePicture ? (
           <FastImage

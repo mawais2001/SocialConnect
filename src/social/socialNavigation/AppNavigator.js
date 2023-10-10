@@ -13,6 +13,7 @@ import AllGroups from '../../Screens/Chat/AllGroups';
 import GroupChatScreen from '../../Screens/Chat/GroupChatScreen';
 import Comment from '../../Screens/Comment/Comment';
 import Followers from '../../Screens/Follower/Followers';
+import Following from '../../Screens/Follower/Following';
 
 const Stack = createNativeStackNavigator();
 function AppNavigator(props) {
@@ -78,6 +79,11 @@ function AppNavigator(props) {
       <Stack.Screen
         name={navigationString.Followers}
         component={Followers}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={navigationString.Following}
+        component={Following}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

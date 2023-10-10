@@ -170,6 +170,29 @@ function EditProfile(props) {
         phone: userData.phoneNumber,
         profilePicture: newImgUrl,
       });
+
+      const userPostsRef = firestores()
+        .collection('posts')
+        .doc(userData.uid)
+        .collection('allposts');
+
+      // Query user's posts
+      const querySnapshot = await userPostsRef.get();
+      console.log('querySnapshot is: ', querySnapshot);
+
+      // Update user-related information in each post
+      querySnapshot.forEach(async doc => {
+        console.log('doc', doc);
+        const postRef = doc.ref;
+        console.log('postRef', postRef);
+        // Update user-related information in the post
+        await postRef.update({
+          userName: name,
+          userAddress: address,
+          userPicture: newImgUrl,
+        });
+      });
+
       //   console.log('Profile is updated completely');
       return true;
     } catch (error) {
@@ -179,6 +202,7 @@ function EditProfile(props) {
   };
 
   const editPartialProfile = async () => {
+    console.log('------ THis is edit profile-------');
     try {
       await userData.updateProfile({
         displayName: name,
@@ -189,6 +213,28 @@ function EditProfile(props) {
         address: address,
         phone: userData.phoneNumber,
       });
+
+      const userPostsRef = firestores()
+        .collection('posts')
+        .doc(userData.uid)
+        .collection('allposts');
+
+      // Query user's posts
+      const querySnapshot = await userPostsRef.get();
+      console.log('querySnapshot is: ', querySnapshot);
+
+      // Update user-related information in each post
+      querySnapshot.forEach(async doc => {
+        console.log('doc', doc);
+        const postRef = doc.ref;
+        console.log('postRef', postRef);
+        // Update user-related information in the post
+        await postRef.update({
+          userName: name,
+          userAddress: address,
+        });
+      });
+
       //   console.log('Profile is updated Partially!');
       return true;
     } catch (error) {

@@ -19,11 +19,21 @@ import {useNavigation} from '@react-navigation/native';
 import ButtonCompo from '../../Components/ButtonCompo';
 import imagePath from '../../constants/imagePath';
 import FastImage from 'react-native-fast-image';
+import navigationString from '../../Navigation/navigationString';
 
 function DetailPost(props) {
   const postData = props.route.params.postData;
   const navigation = useNavigation();
-  // console.log("All post data is ", postData);
+  // console.log(props.route.params);
+
+  // console.log('All post data is ', postData.userId);
+
+  const handleUserProfilScreen = () => {
+    navigation.navigate(navigationString.User_Profile, {
+      userId: postData.userId,
+    });
+  };
+
   return (
     <ImageBackground
       blurRadius={0.5}
@@ -52,15 +62,19 @@ function DetailPost(props) {
             alignItems: 'center',
             flex: 1,
           }}>
-          <FastImage
-            style={styles.profileStyle}
-            source={{
-              uri: postData.userPicture
-                ? postData.userPicture
-                : imagePath.avatar,
-              priority: FastImage.priority.normal,
-            }}
-          />
+          <TouchableOpacity
+            onPress={handleUserProfilScreen}
+            activeOpacity={0.5}>
+            <FastImage
+              style={styles.profileStyle}
+              source={{
+                uri: postData.userPicture
+                  ? postData.userPicture
+                  : imagePath.avatar,
+                priority: FastImage.priority.normal,
+              }}
+            />
+          </TouchableOpacity>
           <View style={{flex: 1}}>
             <Text numberOfLines={1} style={styles.profileNameStyle}>
               {' '}
