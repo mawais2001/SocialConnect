@@ -135,22 +135,31 @@ function Profile(props) {
           }}
         /> */}
         <View style={styles.followerContainer}>
-          <Text style={styles.followerHeading}>
-            {udetail && udetail._data.following ? (
-              udetail._data.following.length
-            ) : (
-              <ActivityIndicator size="small" color={colors.socialpink} />
-            )}
-          </Text>
-          <Text style={styles.followerSubHeading}>FOLLOWERS</Text>
+          <TouchableOpacity
+            style={{alignItems: 'center'}}
+            activeOpacity={0.5}
+            onPress={() =>
+              navigation.navigate(navigationString.Followers, {
+                followersList: udetail._data.follower,
+              })
+            }>
+            <Text style={styles.followerHeading}>
+              {udetail && udetail._data.follower ? (
+                udetail._data.follower.length
+              ) : (
+                <ActivityIndicator size="small" color={colors.socialpink} />
+              )}
+            </Text>
+            <Text style={styles.followerSubHeading}>FOLLOWERS</Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{borderRightWidth: 1, borderRightColor: colors.socialpink}}
         />
         <View style={styles.followerContainer}>
           <Text style={styles.followerHeading}>
-            {udetail && udetail._data.follower ? (
-              udetail._data.follower.length
+            {udetail && udetail._data.following ? (
+              udetail._data.following.length
             ) : (
               <ActivityIndicator size="small" color={colors.socialpink} />
             )}

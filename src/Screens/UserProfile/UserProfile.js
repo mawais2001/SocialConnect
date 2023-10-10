@@ -39,6 +39,7 @@ const UserProfile = props => {
   const [numColumns, setNumColumns] = useState(3);
   const [follow, setFollow] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
+  const [isEmpty, setIsEmpty] = useState(false);
   const navigation = useNavigation();
   // const getUserData = async () => {
   //   try {
@@ -84,6 +85,9 @@ const UserProfile = props => {
         userPosts.push({...postData, id: doc.id});
       });
       setUserPosts(userPosts);
+      if (userPosts.length < 1) {
+        setIsEmpty(true);
+      }
       // Now userPosts array contains all posts for the user
       // console.log('User Posts:', userPosts.length);
     } catch (error) {
@@ -152,6 +156,26 @@ const UserProfile = props => {
   const handleFollow = async () => {
     await handleFollower();
     await handleFollowing();
+  };
+
+  const handleListEmptyComponent = () => {
+    return (
+      <View>
+        {isEmpty ? (
+          <Text
+            style={{
+              marginVertical: moderateVerticalScale(12),
+              fontSize: scale(16),
+              color: colors.socialpink,
+              textAlign: 'center',
+            }}>
+            User have Not any Post
+          </Text>
+        ) : (
+          <ActivityIndicator size="large" color={colors.socialpink} />
+        )}
+      </View>
+    );
   };
 
   const renderItem = ({item}) => {
@@ -293,8 +317,17 @@ const UserProfile = props => {
           <View style={styles.followerDetails}>
             <View style={styles.followerContainer}>
               <Text style={styles.followerHeading}>
-                {userPosts && userPosts.length ? (
+                {/* {userPosts && userPosts ? (
                   userPosts.length
+                ) : (
+                  <ActivityIndicator size="small" color="gray" />
+                )} */}
+                {userPosts ? (
+                  userPosts.length > 0 ? (
+                    userPosts.length
+                  ) : (
+                    '0'
+                  )
                 ) : (
                   <ActivityIndicator size="small" color="gray" />
                 )}
@@ -363,6 +396,7 @@ const UserProfile = props => {
               keyExtractor={item => item.id}
               numColumns={numColumns}
               showsVerticalScrollIndicator={false}
+              ListEmptyComponent={handleListEmptyComponent}
               // horizontal={true} // Set this to true for row-wise display
               // numColumns={3}
               // horizontal={true}

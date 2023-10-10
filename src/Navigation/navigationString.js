@@ -15,4 +15,5 @@ export default {
   GroupChatScreen: 'GroupChatScreen',
   AllGroups: 'AllGroups',
   COMMENT: 'Comment',
+  Followers: 'Followers',
 };
