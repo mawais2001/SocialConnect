@@ -93,7 +93,7 @@ function Following(props) {
       return user.fullName.toLowerCase().includes(searchText.toLowerCase());
     });
     setFilteredUsers(filtered);
-    console.log('filtered user', filtered);
+    // console.log('filtered user', filtered);
     if (filtered.length === 0) {
       // console.log('no search query matching');
       setUsersLength(0);
@@ -268,6 +268,7 @@ function Following(props) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 paddingVertical: moderateVerticalScale(8),
+                paddingHorizontal: moderateScale(4),
                 backgroundColor: isFollow
                   ? colors.socialgray
                   : colors.redOpacity20,
@@ -492,7 +493,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(30),
   },
   nameStyle: {
-    fontSize: scale(13),
+    fontSize: scale(11),
     color: colors.blackColor,
     // fontWeight: '500',
     fontFamily: fontFamily.semiBold,
@@ -503,7 +504,7 @@ const styles = StyleSheet.create({
     // fontFamily: fontFamily.medium,
   },
   FollowStyle: {
-    fontSize: scale(12),
+    fontSize: scale(10),
     color: colors.blackColor,
     // fontFamily: fontFamily.medium,
   },

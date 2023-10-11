@@ -24,6 +24,7 @@ import fontFamily from '../../styles/fontFamily';
 import FastImage from 'react-native-fast-image';
 import navigationString from '../../Navigation/navigationString';
 import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
+import messaging from '@react-native-firebase/messaging';
 
 function Profile(props) {
   const [udetail, setUDetail] = useState(null);
@@ -62,7 +63,7 @@ function Profile(props) {
     }
   };
 
-  const handleHelp = () => {
+  const handleHelp = async () => {
     if (netinfo.isInternetReachable && netinfo.isConnected) {
       Alert.alert('Online', 'You are online');
     }
@@ -105,35 +106,7 @@ function Profile(props) {
         />
         <Text style={styles.profileNameStyle}>{userData.displayName}</Text>
       </View>
-      {/* 
-      {udetail && udetail._data.follower ? (
-        <Text>{udetail._data.follower.length}</Text>
-      ) : (
-        <ActivityIndicator
-          style={styles.loadingIndicator}
-          size="small"
-          color={colors.socialpink}
-        />
-      )} */}
-
       <View style={styles.followerDetails}>
-        {/* <View style={styles.followerContainer}>
-          <Text style={styles.followerHeading}>
-            {udetail && udetail._data.follower ? (
-              udetail._data.follower.length
-            ) : (
-              <ActivityIndicator size="small" color="gray" />
-            )}
-          </Text>
-          <Text style={styles.followerSubHeading}>POSTS</Text>
-        </View> */}
-        {/* <View
-          style={{
-            borderRightWidth: 1,
-            flex: 1,
-            borderRightColor: colors.socialpink,
-          }}
-        /> */}
         <View style={styles.followerContainer}>
           <TouchableOpacity
             style={{alignItems: 'center'}}
@@ -177,17 +150,6 @@ function Profile(props) {
         </View>
       </View>
 
-      {/* <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.btn}
-        onPress={() =>
-          navigation.navigate('EditProfile', {userDetail: udetail?._data})
-        }>
-        <View style={{flexDirection: 'row'}}>
-          <Edit name="edit" size={25} color={colors.socialpink} />
-          <Text style={styles.text}>Edit Profile</Text>
-        </View>
-      </TouchableOpacity> */}
       {userDataLoading ? ( // Show activity indicator while loading
         <ActivityIndicator
           style={styles.loadingIndicator}
@@ -237,14 +199,6 @@ function Profile(props) {
           <Text style={styles.text}>Logout</Text>
         </View>
       </TouchableOpacity>
-
-      {/* <Text style={styles.profileNameStyle}>{userData.phoneNumber} </Text> */}
-      {/* {
-                !!udetail ? <View>
-                    <Text style={styles.profileNameStyle}> {udetail._data.address} </Text>
-                    <Text style={styles.profileNameStyle}> {udetail._data.email} </Text>
-                </View> : <Text>Address and Email is missing!</Text>
-            } */}
     </View>
   );
 }

@@ -34,6 +34,8 @@ import fontFamily from '../../styles/fontFamily';
 import LikeCompo from '../Like/LikeCompo';
 import FastImage from 'react-native-fast-image';
 import CommentCompo from '../Comment/CommentCompo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 const MemoizedFlatList = React.memo(FlatList);
 
@@ -340,9 +342,23 @@ function Home(props) {
     getMyPostsData();
   };
 
+  const setFcmToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      // console.log(fcmToken);
+      await firestore().collection('fcmtoken').doc(userData.uid).set({
+        token: fcmToken,
+      });
+    }
+  };
+
   useEffect(() => {
     getMyPostsData();
   }, [isFocused, getMyPostsData]);
+
+  useEffect(() => {
+    setFcmToken();
+  }, []);
 
   return (
     <View style={styles.container}>
